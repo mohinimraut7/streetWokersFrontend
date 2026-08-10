@@ -1,0 +1,198 @@
+[
+  {
+    "id": "v-1001",
+    "vendorId": "VDR2024001234",
+    "applicationNo": "APP2024001234",
+    "status": "Pending Survey",
+    "currentStage": "Survey",
+    "registrationDate": "2024-05-06",
+    "personal": {
+      "fullName": "Ramesh Kumar",
+      "fatherName": "Mahesh Kumar",
+      "dob": "1985-06-15",
+      "gender": "Male",
+      "mobile": "9876543210",
+      "email": "ramesh.kumar@example.com",
+      "aadhaar": "1234 5678 9012",
+      "pan": "ABCPK1234M",
+      "category": "OBC"
+    },
+    "address": {
+      "permanentAddress": "123, Main Street, Ward 12, City, State - 400001",
+      "currentAddress": "123, Main Street, Ward 12, City, State - 400001",
+      "ward": "Ward 12",
+      "zone": "Zone A"
+    },
+    "business": {
+      "vendorType": "Stationary Vendor",
+      "businessCategory": "Food & Beverages",
+      "goodsType": "Tea & Snacks",
+      "businessTiming": "07:00 AM - 09:00 PM",
+      "yearsExperience": "6"
+    },
+    "documents": {
+      "photo": null,
+      "aadhaarCard": null,
+      "panCard": null,
+      "addressProof": null,
+      "businessProof": null
+    }
+  },
+  {
+    "id": "v-1002",
+    "vendorId": "VDR2024001235",
+    "applicationNo": "APP2024001235",
+    "status": "Under Survey",
+    "currentStage": "Survey",
+    "registrationDate": "2024-05-06",
+    "personal": {
+      "fullName": "Sunita Devi",
+      "fatherName": "Ram Lal",
+      "dob": "1990-02-11",
+      "gender": "Female",
+      "mobile": "9823456712",
+      "email": "sunita.devi@example.com",
+      "aadhaar": "2234 5678 9013",
+      "pan": "BXYPD5678N",
+      "category": "General",
+      "aadhaarNumber": "2234 5678 9013"
+    },
+    "address": {
+      "permanentAddress": "45, Market Road, Ward 8, City, State - 400002",
+      "currentAddress": "45, Market Road, Ward 8, City, State - 400002",
+      "ward": "Ward 8",
+      "zone": "Zone B"
+    },
+    "business": {
+      "vendorType": "Mobile Vendor",
+      "businessCategory": "Fruits & Vegetables",
+      "goodsType": "Seasonal Fruits",
+      "businessTiming": "06:00 AM - 02:00 PM",
+      "yearsExperience": "3"
+    },
+    "documents": {
+      "photo": null,
+      "aadhaarCard": null,
+      "panCard": null,
+      "addressProof": null,
+      "businessProof": null
+    }
+  },
+  {
+    "id": "v-1003",
+    "vendorId": "VDR2024001236",
+    "applicationNo": "APP2024001236",
+    "status": "Approved",
+    "currentStage": "Approved",
+    "registrationDate": "2024-05-04",
+    "personal": {
+      "fullName": "Suresh Yadav",
+      "fatherName": "Ram Yadav",
+      "dob": "1982-11-02",
+      "gender": "Male",
+      "mobile": "9812345670",
+      "email": "suresh.yadav@example.com",
+      "aadhaar": "3234 5678 9014",
+      "pan": "CXYPY1122P",
+      "category": "SC"
+    },
+    "address": {
+      "permanentAddress": "78, Station Road, Ward 4, City, State - 400003",
+      "currentAddress": "78, Station Road, Ward 4, City, State - 400003",
+      "ward": "Ward 4",
+      "zone": "Zone C"
+    },
+    "business": {
+      "vendorType": "Stationary Vendor",
+      "businessCategory": "Clothing",
+      "goodsType": "Readymade Garments",
+      "businessTiming": "10:00 AM - 08:00 PM",
+      "yearsExperience": "9"
+    },
+    "documents": {
+      "photo": null,
+      "aadhaarCard": null,
+      "panCard": null,
+      "addressProof": null,
+      "businessProof": null
+    }
+  },
+  {
+    "id": "v-1004",
+    "vendorId": "VDR2024001237",
+    "applicationNo": "APP2024001237",
+    "status": "Pending Approval",
+    "currentStage": "Approval Authority",
+    "registrationDate": "2024-05-06",
+    "personal": {
+      "fullName": "Imran Khan",
+      "fatherName": "Aslam Khan",
+      "dob": "1993-09-21",
+      "gender": "Male",
+      "mobile": "9800112233",
+      "email": "imran.khan@example.com",
+      "aadhaar": "4234 5678 9015",
+      "pan": "DXYPK3344Q",
+      "category": "General"
+    },
+    "address": {
+      "permanentAddress": "22, Bazar Lane, Ward 12, City, State - 400001",
+      "currentAddress": "22, Bazar Lane, Ward 12, City, State - 400001",
+      "ward": "Ward 12",
+      "zone": "Zone A"
+    },
+    "business": {
+      "vendorType": "Mobile Vendor",
+      "businessCategory": "Accessories",
+      "goodsType": "Mobile Accessories",
+      "businessTiming": "11:00 AM - 09:00 PM",
+      "yearsExperience": "4"
+    },
+    "documents": {
+      "photo": null,
+      "aadhaarCard": null,
+      "panCard": null,
+      "addressProof": null,
+      "businessProof": null
+    }
+  },
+  {
+    "id": "v-1005",
+    "vendorId": "VDR2024001238",
+    "applicationNo": "APP2024001238",
+    "status": "Rejected",
+    "currentStage": "Rejected",
+    "registrationDate": "2024-04-28",
+    "personal": {
+      "fullName": "Kavita Sharma",
+      "fatherName": "Om Prakash",
+      "dob": "1988-01-30",
+      "gender": "Female",
+      "mobile": "9765432109",
+      "email": "kavita.sharma@example.com",
+      "aadhaar": "5234 5678 9016",
+      "pan": "EXYPS5566R",
+      "category": "OBC"
+    },
+    "address": {
+      "permanentAddress": "9, Temple Street, Ward 2, City, State - 400004",
+      "currentAddress": "9, Temple Street, Ward 2, City, State - 400004",
+      "ward": "Ward 2",
+      "zone": "Zone D"
+    },
+    "business": {
+      "vendorType": "Stationary Vendor",
+      "businessCategory": "Others",
+      "goodsType": "Household Items",
+      "businessTiming": "09:00 AM - 07:00 PM",
+      "yearsExperience": "2"
+    },
+    "documents": {
+      "photo": null,
+      "aadhaarCard": null,
+      "panCard": null,
+      "addressProof": null,
+      "businessProof": null
+    }
+  }
+]

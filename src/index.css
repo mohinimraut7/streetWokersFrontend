@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---- Brand palette ---- */
+  --color-brand-50: #EDFBFB;
+  --color-brand-100: #D3F3F3;
+  --color-brand-200: #A7E7E8;
+  --color-brand-300: #6FD5D7;
+  --color-brand-400: #38BEC0;
+  --color-brand-500: #0EA5A8;
+  --color-brand-600: #0B8689;
+  --color-brand-700: #0A6A6D;
+  --color-brand-800: #0B4F52;
+  --color-brand-900: #083638;
+
+  --color-accent-50: #FFF7ED;
+  --color-accent-100: #FFEACB;
+  --color-accent-200: #FFD8A0;
+  --color-accent-300: #FBC077;
+  --color-accent-400: #F4A85B;
+  --color-accent-500: #EC9542;
+  --color-accent-600: #D97C2A;
+  --color-accent-700: #B4611D;
+
+  --color-ink-900: #0F172A;
+  --color-ink-700: #334155;
+  --color-ink-500: #64748B;
+  --color-ink-300: #94A3B8;
+  --color-ink-100: #E2E8F0;
+  --color-ink-50: #F1F5F9;
+
+  --color-surface: #F8FAFC;
+  --color-card: #FFFFFF;
+
+  --color-success-500: #17A167;
+  --color-success-100: #DCFCE9;
+  --color-warning-500: #D68A15;
+  --color-warning-100: #FEF3D6;
+  --color-danger-500: #E23B3B;
+  --color-danger-100: #FCE2E2;
+  --color-info-500: #2F7FE0;
+  --color-info-100: #DDEAFC;
+
+  /* ---- Type ---- */
+  --font-display: "Manrope", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* ---- Radius ---- */
+  --radius-card: 24px;
+  --radius-control: 12px;
+
+  /* ---- Shadows ---- */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -8px rgba(15, 23, 42, 0.10);
+  --shadow-soft-lg: 0 4px 8px rgba(15, 23, 42, 0.04), 0 20px 40px -16px rgba(15, 23, 42, 0.16);
+  --shadow-brand: 0 10px 24px -10px rgba(14, 165, 168, 0.45);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+  }
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink-900);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .id-mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--color-ink-100);
+    border-radius: 999px;
+  }
+  .sidebar-gradient {
+    background: linear-gradient(160deg, var(--color-brand-800) 0%, var(--color-brand-900) 55%, #062527 100%);
+  }
+}
