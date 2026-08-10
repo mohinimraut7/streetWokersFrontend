@@ -10,6 +10,7 @@ import VendorRegistration from "./modules/vendors/pages/VendorRegistration";
 import VendorList from "./modules/vendors/pages/VendorList";
 import VendorProfile from "./modules/vendors/pages/VendorProfile";
 import EditVendorApplication from "./modules/vendors/pages/EditVendorApplication";
+import VendorPayment from "./modules/vendors/pages/VendorPayment";
 
 // ... Routes मध्ये:
 <Route path="/vendors/edit/:id" element={<EditVendorApplication />} />
@@ -57,6 +58,7 @@ function App() {
               <Route path="list" element={<VendorList />} />
               <Route path="profile/:id" element={<VendorProfile />} />
               <Route path="/vendors/edit/:id" element={<EditVendorApplication />} />
+              <Route path="/vendors/payment/:id" element={<VendorPayment />} />
             </Route>
 
             {/* Survey */}
