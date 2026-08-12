@@ -1847,6 +1847,7 @@ const OFFICIALS = [
   },
 ];
 
+
 /* ── Main heading ── */
 function BrandHeader() {
   return (
