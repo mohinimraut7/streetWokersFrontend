@@ -10658,6 +10658,4265 @@
 
 
 
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiBriefcase,
+//   FiShoppingBag,
+//   FiMapPin,
+//   FiHome,
+//   FiClock,
+//   FiCalendar,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import logo from "../../../assets/logovvcmc.jpg";
+// import streetVendorBg from "../../../assets/street-vendor-bg.jpg";
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    COLORS
+// ========================================================= */
+
+// const TEAL = "#004C4D";
+// const GOLD = "#CA9E3A";
+// const CREAM = "#FBFAF6";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+
+//   const date = new Date(d);
+
+//   if (Number.isNaN(date.getTime())) {
+//     return "-";
+//   }
+
+//   return date.toLocaleDateString("en-IN", {
+//     day: "2-digit",
+//     month: "short",
+//     year: "numeric",
+//   });
+// }
+
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+
+//   const birth = new Date(dob);
+
+//   if (Number.isNaN(birth.getTime())) {
+//     return "-";
+//   }
+
+//   return Math.floor(
+//     (Date.now() - birth.getTime()) /
+//       (365.25 * 24 * 60 * 60 * 1000)
+//   );
+// }
+
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+
+//   return vendorType
+//     .toLowerCase()
+//     .includes("mobile")
+//     ? "फिरता"
+//     : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+
+//   const value = gender.toLowerCase();
+
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    LEFT GREEN / GOLD RIBBON
+// ========================================================= */
+
+// function SideRibbon() {
+//   return (
+//     <div
+//       className="
+//         pointer-events-none
+//         absolute
+//         inset-y-0
+//         left-0
+//         z-10
+//         w-[15%]
+//         overflow-hidden
+//       "
+//       aria-hidden="true"
+//     >
+//       <svg
+//         viewBox="0 0 150 540"
+//         preserveAspectRatio="none"
+//         className="h-full w-full"
+//       >
+
+//         {/* =====================================================
+//             TEAL SIDE PANEL
+//             Narrow at top → wide flowing curve at bottom
+//         ===================================================== */}
+
+//         <path
+//           d="
+//             M0 0
+//             H70
+
+//             C
+//               62 35,
+//               55 75,
+//               53 115
+
+//             C
+//               50 165,
+//               49 215,
+//               51 265
+
+//             C
+//               53 315,
+//               59 365,
+//               70 410
+
+//             C
+//               82 460,
+//               101 505,
+//               125 540
+
+//             H0
+//             Z
+//           "
+//           fill={TEAL}
+//         />
+
+//         {/* =====================================================
+//             GOLD CURVE
+//             Exactly follows the outer teal boundary
+//         ===================================================== */}
+
+//         <path
+//           d="
+//             M70 0
+
+//             C
+//               62 35,
+//               55 75,
+//               53 115
+
+//             C
+//               50 165,
+//               49 215,
+//               51 265
+
+//             C
+//               53 315,
+//               59 365,
+//               70 410
+
+//             C
+//               82 460,
+//               101 505,
+//               125 540
+//           "
+//           fill="none"
+//           stroke={GOLD}
+//           strokeWidth="8"
+//           strokeLinecap="round"
+//           vectorEffect="non-scaling-stroke"
+//         />
+
+//       </svg>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    BOTTOM GREEN / GOLD CURVE
+// ========================================================= */
+
+// function BottomCurve() {
+//   return (
+//     <div
+//       className="
+//         pointer-events-none
+//         absolute
+//         bottom-0
+//         right-0
+//         z-[5]
+//         h-[18%]
+//         w-[43%]
+//         overflow-hidden
+//       "
+//       aria-hidden="true"
+//     >
+
+//       <svg
+//         viewBox="0 0 400 100"
+//         preserveAspectRatio="none"
+//         className="h-full w-full"
+//       >
+
+//         <path
+//           d="
+//             M0 100
+//             C100 5 240 80 400 0
+//             L400 100
+//             Z
+//           "
+//           fill={TEAL}
+//         />
+
+//         <path
+//           d="
+//             M0 100
+//             C100 5 240 80 400 0
+//           "
+//           fill="none"
+//           stroke={GOLD}
+//           strokeWidth="8"
+//         />
+
+//       </svg>
+
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    FRONT FIELD
+// ========================================================= */
+
+// function FrontField({ label, value }) {
+//   return (
+//     <div className="flex min-w-0 items-center gap-2">
+//       {/* LABEL */}
+//       <span
+//         className="
+//           w-[42%]
+//           shrink-0
+//           truncate
+//           text-[13px]
+//           font-black
+//           uppercase
+//           tracking-[0.02em]
+//           text-[#0B4D52]
+//         "
+//       >
+//         {label}
+//       </span>
+
+//       {/* COLON */}
+//       <span
+//         className="
+//           shrink-0
+//           text-[11px]
+//           font-black
+//           text-[#0B4D52]
+//         "
+//       >
+//         :
+//       </span>
+
+//       {/* VALUE */}
+//       <span
+//         className="
+//           min-w-0
+//           flex-1
+//           truncate
+//           border-b
+//           border-slate-400
+//           pb-[4px]
+//           text-[13px]
+//           font-extrabold
+//           leading-tight
+//           text-slate-900
+//         "
+//       >
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    BACK FIELD
+// ========================================================= */
+
+// function BackField({
+//   icon: Icon,
+//   label,
+//   value,
+// }) {
+//   return (
+//     <div className="flex min-w-0 items-center gap-2">
+
+//       {/* ICON */}
+//       <div
+//         className="
+//           flex
+//           h-6
+//           w-6
+//           shrink-0
+//           items-center
+//           justify-center
+//           rounded-full
+//           bg-[#E8F0EC]
+//         "
+//       >
+//         <Icon
+//           size={12}
+//           strokeWidth={2.5}
+//           className="text-[#0B4D52]"
+//         />
+//       </div>
+
+//       {/* LABEL */}
+//       <span
+//         className="
+//           w-[42%]
+//           shrink-0
+//           truncate
+//           text-[13px]
+//           font-black
+//           uppercase
+//           tracking-[0.01em]
+//           text-[#0B4D52]
+//         "
+//       >
+//         {label}
+//       </span>
+
+//       {/* COLON */}
+//       <span
+//         className="
+//           shrink-0
+//           text-[11px]
+//           font-black
+//           text-[#0B4D52]
+//         "
+//       >
+//         :
+//       </span>
+
+//       {/* VALUE */}
+//       <span
+//         className="
+//           min-w-0
+//           flex-1
+//           truncate
+//           border-b
+//           border-slate-200
+//           pb-[4px]
+//           text-[13px]
+//           font-extrabold
+//           leading-tight
+//           text-slate-900
+//         "
+//       >
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+
+//   /* =======================================================
+//      API DATA (replaces Redux selectors)
+//   ======================================================= */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+
+//   /* =======================================================
+//      VERIFICATION URL
+//      Reuses the same QR data the backend generated at
+//      payment time, so the QR on the card matches exactly.
+//   ======================================================= */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+
+//   /* =======================================================
+//      CARD CODE
+//   ======================================================= */
+
+//   const cardCode = certificate?.certificateNo || "";
+
+
+//   /* =======================================================
+//      LOADING
+//   ======================================================= */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+
+//   /* =======================================================
+//      VENDOR NOT FOUND
+//   ======================================================= */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+
+//         <p className="text-sm text-ink-500">
+//           {error || "Vendor not found."}
+//         </p>
+
+//         <Link
+//           to="/vendors/list"
+//           className="
+//             mt-3
+//             inline-block
+//             text-sm
+//             font-semibold
+//             text-brand-600
+//           "
+//         >
+//           Back to Vendor List
+//         </Link>
+
+//       </Card>
+//     );
+//   }
+
+
+//   /* =======================================================
+//      CERTIFICATE NOT YET ISSUED
+//   ======================================================= */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status:
+//           <span className="ml-1 font-semibold">
+//             {vendor.status}
+//           </span>
+//         </p>
+
+//         <Link
+//           to={`/vendors/profile/${vendor.applicationNo}`}
+//           className="
+//             mt-4
+//             inline-block
+//             text-sm
+//             font-semibold
+//             text-brand-600
+//           "
+//         >
+//           View Vendor Profile
+//         </Link>
+
+//       </Card>
+//     );
+//   }
+
+
+//   /* =======================================================
+//      ACTIONS
+//   ======================================================= */
+
+//   const handlePrint = () => {
+//     window.print();
+//   };
+
+
+//   const handleDownloadPdf = () => {
+//     window.print();
+//   };
+
+
+//   /* =======================================================
+//      FRONT DATA
+//   ======================================================= */
+
+//   const frontFields = [
+//     {
+//       label: "ओळखपत्र क्रमांक",
+//       value: certificate.certificateNo,
+//     },
+//     {
+//       label: "विक्रेत्याचे नाव",
+//       value: vendor.personal.fullName,
+//     },
+//     {
+//       label: "जन्मतारीख / वय",
+//       value: `${formatDate(vendor.personal.dob)} / ${calcAge(
+//         vendor.personal.dob
+//       )} वर्षे`,
+//     },
+//     {
+//       label: "लिंग",
+//       value: genderType(vendor.personal.gender),
+//     },
+//     {
+//       label: "पत्ता",
+//       value: vendor.address.permanentAddress,
+//     },
+//     {
+//       label: "मोबाईल क्रमांक",
+//       value: vendor.personal.mobile,
+//     },
+//   ];
+
+
+//   /* =======================================================
+//      BACK DATA
+//   ======================================================= */
+
+//   const backFields = [
+//     {
+//       icon: FiBriefcase,
+//       label: "व्यवसायाचा प्रकार",
+//       value: vendor.business.businessType,
+//     },
+
+//     {
+//       icon: FiShoppingBag,
+//       label: "विक्रीचा प्रकार",
+//       value: saleType(vendor.business.vendorType),
+//     },
+
+//     {
+//       icon: FiMapPin,
+//       label: "विक्रय स्थान",
+//       value: vendor.address.zone,
+//     },
+
+//     {
+//       icon: FiHome,
+//       label: "विभाग / प्रभाग",
+//       value: vendor.address.ward,
+//     },
+
+//     {
+//       icon: FiClock,
+//       label: "व्यवसायाची वेळ",
+//       value: vendor.business.businessTiming,
+//     },
+
+//     {
+//       icon: FiCalendar,
+//       label: "ओळखपत्राची वैधता",
+//       value: `${formatDate(certificate.issueDate)} - ${formatDate(
+//         certificate.validTill
+//       )}`,
+//     },
+//   ];
+
+
+//   /* =======================================================
+//      PAGE
+//   ======================================================= */
+
+//   return (
+//     <div className="space-y-5">
+
+
+//       {/* ==================================================
+//           PAGE HEADER
+//       ================================================== */}
+
+//       <div
+//         className="
+//           flex
+//           flex-wrap
+//           items-start
+//           justify-between
+//           gap-4
+//           print:hidden
+//         "
+//       >
+
+//         <div>
+
+//           <p
+//             className="
+//               text-xs
+//               font-semibold
+//               text-ink-500
+//             "
+//           >
+
+//             <Link
+//               to="/vendors/list"
+//               className="
+//                 text-brand-600
+//                 hover:text-brand-700
+//               "
+//             >
+//               Smart Card
+//             </Link>
+
+//             {" / "}
+
+//             {cardCode}
+
+//           </p>
+
+
+//           <h1
+//             className="
+//               mt-1
+//               font-display
+//               text-2xl
+//               font-bold
+//               text-ink-900
+//             "
+//           >
+//             पथविक्रेता ओळखपत्र
+//           </h1>
+
+
+//           <p
+//             className="
+//               text-sm
+//               text-ink-500
+//             "
+//           >
+//             आधार कार्डच्या आकाराचे महानगरपालिका ओळखपत्र
+//           </p>
+
+//         </div>
+
+
+//         {/* ACTIONS */}
+
+//         <div className="flex gap-2">
+
+//           <Button
+//             variant="outline"
+//             icon={FiDownload}
+//             onClick={handleDownloadPdf}
+//           >
+//             Download
+//           </Button>
+
+//           <Button
+//             icon={FiPrinter}
+//             onClick={handlePrint}
+//           >
+//             Print
+//           </Button>
+
+//         </div>
+
+//       </div>
+
+
+//       {/* ==================================================
+//           CARD PREVIEW
+//       ================================================== */}
+
+//       <div
+//         className="
+//           flex
+//           flex-col
+//           items-center
+//           gap-8
+//           px-1
+//           py-6
+//         "
+//       >
+
+
+//         {/* =================================================
+//             FRONT CARD
+//         ================================================= */}
+
+//         <div
+//           className="
+//             smart-card
+//             smart-card-front
+//             relative
+//             mx-auto
+//             aspect-[856/540]
+//             w-full
+//             max-w-[640px]
+//             overflow-hidden
+//             rounded-2xl
+//             border
+//             border-[#004C4D]/15
+//             shadow-[0_18px_44px_rgba(0,65,65,.18)]
+//           "
+//           style={{
+//             backgroundImage: `
+//               linear-gradient(
+//                 90deg,
+//                 rgba(251,250,246,0.98) 0%,
+//                 rgba(251,250,246,0.94) 38%,
+//                 rgba(251,250,246,0.72) 65%,
+//                 rgba(251,250,246,0.30) 100%
+//               ),
+//               url(${streetVendorBg})
+//             `,
+//             backgroundSize: "cover",
+//             backgroundPosition: "center",
+//             backgroundRepeat: "no-repeat",
+//           }}
+//         >
+
+//           {/* LEFT RIBBON */}
+
+//           <SideRibbon />
+
+
+//           {/* SUBTLE SECURITY PATTERN */}
+
+//           <div
+//             className="
+//               pointer-events-none
+//               absolute
+//               inset-0
+//               z-[1]
+//               opacity-[0.07]
+//             "
+//             style={{
+//               backgroundImage: `
+//                 repeating-radial-gradient(
+//                   ellipse at center,
+//                   transparent 0px,
+//                   transparent 12px,
+//                   rgba(0,76,77,.20) 13px,
+//                   transparent 14px
+//                 )
+//               `,
+//             }}
+//           />
+
+
+//           {/* FRONT CONTENT */}
+
+//           <div
+//             className="
+//               relative
+//               z-20
+//               flex
+//               h-full
+//               flex-col
+//               pl-[10%]
+//               pr-[3%]
+//               py-[4%]
+//             "
+//           >
+
+
+//             {/* ==========================================
+//                 HEADER
+//             ========================================== */}
+
+//             <div
+//               className="
+//                 flex
+//                 shrink-0
+//                 items-center
+//                 gap-3
+//               "
+//             >
+
+//               {/* LOGO */}
+
+//               <div
+//                 className="
+//                   flex
+//                   h-12
+//                   w-12
+//                   shrink-0
+//                   items-center
+//                   justify-center
+//                   rounded-full
+//                   bg-white
+//                   p-1
+//                   shadow-sm
+//                   ring-1
+//                   ring-[#005050]/15
+//                 "
+//               >
+
+//                 <img
+//                   src={logo}
+//                   alt="VVCMC"
+//                   className="
+//                     h-full
+//                     w-full
+//                     rounded-full
+//                     object-contain
+//                   "
+//                 />
+
+//               </div>
+
+
+//               {/* TITLE */}
+
+//               <div className="min-w-0">
+
+//                 <h1
+//                   className="
+//                     font-display
+//                     text-[20px]
+//                     font-black
+//                     leading-none
+//                     text-[#0B4D52]
+//                   "
+//                 >
+//                   वसई विरार शहर महानगरपालिका
+//                 </h1>
+
+
+
+//                 <div
+//                   className="
+//                     mt-1.5
+//                     flex
+//                     items-center
+//                     gap-2
+//                     text-[10px]
+//                     font-bold
+//                     uppercase
+//                     tracking-[0.12em]
+//                     text-[#CA9E3A]
+//                   "
+//                 >
+
+//                   <span className="h-px w-5 bg-[#CA9E3A]/90" />
+
+//                   पथविक्रेता व्यवस्थापन प्रणाली
+
+//                   <span className="h-px w-5 bg-[#CA9E3A]/60" />
+
+//                 </div>
+
+//               </div>
+
+//             </div>
+
+
+//             {/* ==========================================
+//                 FRONT BODY
+//                 SAME SPACING AS BACK
+//             ========================================== */}
+
+//             <div
+//               className="
+//                 mt-3
+//                 flex
+//                 min-h-0
+//                 flex-1
+//                 items-center
+//               "
+//             >
+
+
+//               {/* ========================================
+//                   PHOTO
+//               ======================================== */}
+
+//               <div
+//                 className="
+//                   relative
+//                   z-10
+//                   flex
+//                   h-[60%]
+//                   w-[23%]
+//                   shrink-0
+//                   items-center
+//                   justify-center
+//                   overflow-hidden
+//                   rounded-xl
+//                   border-2
+//                   border-[#0B4D52]
+//                   bg-white
+//                   shadow-sm
+//                 "
+//               >
+
+//                 {vendor.documents?.photo ? (
+
+//                   <img
+//                     src={vendor.documents.photo}
+//                     alt={vendor.personal.fullName}
+//                     className="
+//                       h-full
+//                       w-full
+//                       object-cover
+//                     "
+//                   />
+
+//                 ) : (
+
+//                   <div
+//                     className="
+//                       flex
+//                       h-full
+//                       w-full
+//                       flex-col
+//                       items-center
+//                       justify-center
+//                       gap-1
+//                     "
+//                   >
+
+//                     <FiUser
+//                       size={40}
+//                       strokeWidth={1.2}
+//                       className="text-slate-300"
+//                     />
+
+//                     <span
+//                       className="
+//                         text-[7px]
+//                         font-semibold
+//                         uppercase
+//                         tracking-wide
+//                         text-slate-400
+//                       "
+//                     >
+//                       PHOTO
+//                     </span>
+
+//                   </div>
+
+//                 )}
+
+//               </div>
+
+
+//               {/* ========================================
+//                   FRONT INFORMATION
+//               ======================================== */}
+
+
+
+//               <div
+//                 className="
+//                   ml-4
+//                   flex
+//                   min-w-0
+//                   flex-1
+//                   h-[70%]
+//                   flex-col
+//                   justify-between
+//                   self-center
+//                 "
+//               >
+//                 {frontFields.map(
+//                   ({
+//                     label,
+//                     value,
+//                   }) => (
+//                     <FrontField
+//                       key={label}
+//                       label={label}
+//                       value={value}
+//                     />
+//                   )
+//                 )}
+//               </div>
+
+
+//               {/* ========================================
+//                   QR
+//               ======================================== */}
+
+//               <Link
+//                 to={`/verify/${vendor.applicationNo}`}
+//                 className="
+//                   relative
+//                   z-10
+//                   ml-4
+//                   flex
+//                   h-[64%]
+//                   w-[23%]
+//                   max-w-[400px]
+//                   shrink-0
+//                   items-center
+//                   justify-center
+//                   rounded-xl
+//                   p-2
+//                   shadow-sm
+//                   transition-transform
+//                   hover:scale-[1.02]
+//                 "
+//               >
+
+//                 <QRCodeSVG
+//                   value={verifyUrl}
+//                   size={150}
+//                   level="M"
+//                   bgColor="#FFFFFF"
+//                   fgColor="#111111"
+//                   className="
+//                     h-full
+//                     w-full
+//                   "
+//                 />
+
+//               </Link>
+
+//             </div>
+
+
+//             {/* FRONT CURVE */}
+
+//             <BottomCurve />
+
+
+//             {/* FRONT MESSAGE */}
+
+//             <div
+//               className="
+//                 pointer-events-none
+//                 absolute
+//                 bottom-[3.5%]
+//                 right-[3%]
+//                 z-20
+//                 text-right
+//                 text-white
+//               "
+//             >
+
+//               <p className="text-[5px] font-bold uppercase">
+//                 Together for
+//               </p>
+
+//               <p className="text-[5.5px] font-black uppercase">
+//                 Clean, Safe & Empowered
+//               </p>
+
+//               <p className="text-[5.5px] font-black uppercase">
+//                 Street Vendors
+//               </p>
+
+//             </div>
+
+//           </div>
+
+//         </div>
+
+
+//         {/* =================================================
+//             BACK CARD
+//         ================================================= */}
+
+//         <div
+//           className="
+//             smart-card
+//             smart-card-back
+//             relative
+//             mx-auto
+//             aspect-[856/540]
+//             w-full
+//             max-w-[640px]
+//             overflow-hidden
+//             rounded-2xl
+//             border
+//             border-[#004C4D]/15
+//             bg-[#FBFAF6]
+//             shadow-[0_18px_44px_rgba(0,65,65,.18)]
+//           "
+//         >
+
+//           {/* LEFT RIBBON */}
+
+//           <SideRibbon />
+
+
+//           {/* BACKGROUND */}
+
+//           <div
+//             className="
+//               absolute
+//               inset-0
+//               z-0
+//               bg-[#FBFAF6]
+//             "
+//           />
+
+
+//           {/* SECURITY PATTERN */}
+
+//           <div
+//             className="
+//               pointer-events-none
+//               absolute
+//               inset-0
+//               z-[1]
+//               opacity-[0.10]
+//             "
+//             style={{
+//               backgroundImage: `
+//                 repeating-radial-gradient(
+//                   ellipse at center,
+//                   transparent 0px,
+//                   transparent 12px,
+//                   rgba(0,76,77,.20) 13px,
+//                   transparent 14px
+//                 )
+//               `,
+//             }}
+//           />
+
+
+//           {/* ==========================================
+//               BACK CONTENT
+//           ========================================== */}
+
+//           <div
+//             className="
+//               relative
+//               z-[20]
+//               flex
+//               h-full
+//               pl-[9%]
+//               pr-[4%]
+//               py-[5%]
+//             "
+//           >
+
+//             {/* BACK FIELDS */}
+
+//             <div
+//               className="
+//                 flex
+//                 min-w-0
+//                 flex-1
+//                 flex-col
+//                 justify-center
+//                 gap-[5%]
+//               "
+//             >
+
+//               {backFields.map(
+//                 ({
+//                   icon,
+//                   label,
+//                   value,
+//                 }) => (
+//                   <BackField
+//                     key={label}
+//                     icon={icon}
+//                     label={label}
+//                     value={value}
+//                   />
+//                 )
+//               )}
+
+//             </div>
+
+
+//             {/* ========================================
+//                 WATERMARK
+//             ======================================== */}
+
+
+//             <div
+//               className="
+//                 relative
+//                 ml-[3%]
+//                 flex
+//                 h-full
+//                 w-[30%]
+//                 shrink-0
+//                 items-center
+//                 justify-center
+//               "
+//             >
+//               {/* WATERMARK LOGO */}
+//               <div
+//                 className="
+//                   relative
+//                   z-10
+//                   flex
+//                   h-[82%]
+//                   aspect-square
+//                   items-center
+//                   justify-center
+//                   opacity-[0.26]
+//                 "
+//               >
+//                 <img
+//                   src={logo}
+//                   alt=""
+//                   className="
+//                     h-full
+//                     w-full
+//                     object-contain
+//                   "
+//                 />
+//               </div>
+//             </div>
+
+//           </div>
+
+
+//           {/* BACK CURVE */}
+
+//           <BottomCurve />
+
+
+//           {/* ========================================
+//               AUTHORIZED SIGNATORY
+//           ======================================== */}
+
+//           <div
+//             className="
+//               absolute
+//               bottom-[4%]
+//               left-[13%]
+//               z-[20]
+//               text-center
+//             "
+//           >
+
+//             <div
+//               className="
+//                 mb-0.5
+//                 h-px
+//                 w-20
+//                 bg-slate-400
+//               "
+//             />
+
+//             <p
+//               className="
+//                 text-[10px]
+//                 font-black
+//                 uppercase
+//                 tracking-wide
+//                 text-[#0B4D52]
+
+//               "
+//             >
+//               अधिकृत स्वाक्षरी
+//             </p>
+
+//             <p
+//               className="
+//                 text-[7px]
+//                 font-bold
+//                 text-slate-500
+//               "
+//             >
+//               VVCMC
+//             </p>
+
+//           </div>
+
+//         </div>
+
+//       </div>
+
+
+//       {/* ==================================================
+//           VERIFICATION
+//       ================================================== */}
+
+//       <div
+//         className="
+//           flex
+//           justify-center
+//           print:hidden
+//         "
+//       >
+
+//         <Button
+//           variant="ghost"
+//           icon={FiExternalLink}
+//           onClick={() =>
+//             navigate(
+//               `/verify/${vendor.applicationNo}`
+//             )
+//           }
+//         >
+//           Open Verification Screen
+//         </Button>
+
+//       </div>
+
+
+//       {/* ==================================================
+//           PRINT CSS
+//       ================================================== */}
+
+//       <style>{`
+
+//         @media print {
+
+//           body {
+//             background: white !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\\\:hidden {
+//             display: none !important;
+//           }
+
+//           .smart-card {
+//             width: 85.6mm !important;
+//             height: 54mm !important;
+//             max-width: none !important;
+//             border-radius: 3mm !important;
+//             box-shadow: none !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//           }
+
+//           .smart-card-front,
+//           .smart-card-back {
+//             margin: 0 auto !important;
+//           }
+
+//           .smart-card-front {
+//             margin-bottom: 8mm !important;
+//           }
+
+//           @page {
+//             size: A4 portrait;
+//             margin: 12mm;
+//           }
+
+//           .print\\\\:hidden {
+//             display: none !important;
+//           }
+
+//         }
+
+//       `}</style>
+
+//     </div>
+//   );
+// }
+
+
+
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import logo from "../../../assets/logovvcmc.jpg";
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    COLORS
+// ========================================================= */
+
+// const GREEN = "#1E7A3D";
+// const GOLD = "#CA9E3A";
+// const ORANGE = "#C1622A";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//           <p className="text-sm text-ink-500">गळ्यात घालण्यायोग्य महानगरपालिका ओळखपत्र</p>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto w-full max-w-[380px] overflow-hidden rounded-2xl border-2 bg-white shadow-[0_18px_44px_rgba(0,65,65,.18)]"
+//           style={{ borderColor: GREEN }}
+//         >
+//           {/* ── Top header banner ── */}
+//           <div className="relative overflow-hidden" style={{ backgroundColor: GREEN }}>
+//             {/* thin gold wave under the header */}
+//             <div className="absolute inset-x-0 bottom-0 h-[6px]" style={{ backgroundColor: GOLD }} />
+//             <div className="flex items-center gap-2.5 px-4 py-3">
+//               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-sm">
+//                 <img src={logo} alt="VVCMC" className="h-full w-full rounded-full object-contain" />
+//               </div>
+//               <h2 className="text-[13px] font-black leading-tight text-white">वसई-विरार शहर महानगरपालिका</h2>
+//             </div>
+//           </div>
+
+//           {/* ── Title block ── */}
+//           <div className="px-4 pb-3 pt-4 text-center">
+//             <h3 className="text-[19px] font-black" style={{ color: GREEN }}>
+//               रस्ता विक्रेता ओळखपत्र
+//             </h3>
+//             <p className="text-[12px] font-bold" style={{ color: ORANGE }}>
+//               (Street Vendor Identity Card)
+//             </p>
+//             <div className="mx-auto mt-2 h-px w-full" style={{ backgroundColor: GOLD }} />
+//           </div>
+
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4">
+//             <div
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 bg-white"
+//               style={{ borderColor: GREEN }}
+//             >
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── divider gap, matching the reference's blank spacer line ── */}
+//           <div className="px-5">
+//             <div className="h-px bg-slate-200" />
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Footer: signature line ── */}
+//           <div className="border-t px-5 py-3 text-center" style={{ borderColor: GOLD }}>
+//             <p className="text-[11px] font-bold" style={{ color: GREEN }}>
+//               अधिकृत स्वाक्षरी
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           body {
+//             background: white !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           .smart-card {
+//             width: 54mm !important;
+//             height: 85.6mm !important;
+//             max-width: none !important;
+//             border-radius: 3mm !important;
+//             box-shadow: none !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             margin: 0 auto !important;
+//           }
+
+//           @page {
+//             size: A4 portrait;
+//             margin: 12mm;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+// ========================
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import logo from "../../../assets/logovvcmc.jpg";
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    COLORS
+// ========================================================= */
+
+// const GREEN = "#1E7A3D";
+// const GOLD = "#CA9E3A";
+// const ORANGE = "#C1622A";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//           {/* <p className="text-sm text-ink-500">गळ्यात घालण्यायोग्य महानगरपालिका ओळखपत्र</p> */}
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto w-full max-w-[380px] overflow-hidden rounded-2xl border-2 bg-white shadow-[0_18px_44px_rgba(0,65,65,.18)]"
+//           style={{ borderColor: GREEN }}
+//         >
+//           {/* ── Top header banner ── */}
+//           <div className="relative overflow-hidden" style={{ backgroundColor: GREEN }}>
+//             {/* thin gold wave under the header */}
+//             <div className="absolute inset-x-0 bottom-0 h-[6px]" style={{ backgroundColor: GOLD }} />
+//             <div className="flex items-center gap-2.5 px-4 py-3">
+//               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-sm">
+//                 <img src={logo} alt="VVCMC" className="h-full w-full rounded-full object-contain" />
+//               </div>
+//               <h2 className="text-[13px] font-black leading-tight text-white">वसई-विरार शहर महानगरपालिका</h2>
+//             </div>
+//           </div>
+
+//           {/* ── Title block ── */}
+//           <div className="px-4 pb-3 pt-4 text-center">
+//             <h3 className="text-[19px] font-black" style={{ color: GREEN }}>
+//               रस्ता विक्रेता ओळखपत्र
+//             </h3>
+//             <p className="text-[12px] font-bold" style={{ color: ORANGE }}>
+//               (Street Vendor Identity Card)
+//             </p>
+//             <div className="mx-auto mt-2 h-px w-full" style={{ backgroundColor: GOLD }} />
+//           </div>
+
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4">
+//             <div
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 bg-white"
+//               style={{ borderColor: GREEN }}
+//             >
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── divider gap, matching the reference's blank spacer line ── */}
+//           <div className="px-5">
+//             <div className="h-px bg-slate-200" />
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Footer: signature line ── */}
+//           <div className="border-t px-5 py-3 text-center" style={{ borderColor: GOLD }}>
+//             <p className="text-[11px] font-bold" style={{ color: GREEN }}>
+//               अधिकृत स्वाक्षरी
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           body {
+//             background: white !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           .smart-card {
+//             width: 80mm !important;
+//             height: auto !important;
+//             max-width: none !important;
+//             border-radius: 3mm !important;
+//             box-shadow: none !important;
+//             overflow: visible !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             margin: 0 auto !important;
+//           }
+
+//           @page {
+//             size: A4 portrait;
+//             margin: 12mm;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+// ===========================
+// card layout bg used
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    COLORS
+// ========================================================= */
+
+// const GREEN = "#1E7A3D";
+// const GOLD = "#CA9E3A";
+// const ORANGE = "#C1622A";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">
+//             पथविक्रेता ओळखपत्र
+//           </h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto overflow-hidden"
+//           style={{
+//             width: "360px",
+//             aspectRatio: "360 / 536",
+//             backgroundImage: `url(${vvcmccardbg})`,
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             backgroundSize: "100% 100%",
+//           }}
+//         >
+//           {/* =========================================================
+//               IMPORTANT:
+//               The supplied vvcmccardbg.png is the complete card artwork.
+//               Only dynamic photo, QR and values are placed over it.
+//              ========================================================= */}
+
+//           {/* Vendor photo — replaces the placeholder photo in the artwork */}
+//           {vendor.documents?.photo && (
+//             <img
+//               src={vendor.documents.photo}
+//               alt={vendor.personal.fullName}
+//               className="absolute object-cover"
+//               style={{
+//                 left: "22.5%",
+//                 top: "27.99%",
+//                 width: "19.72%",
+//                 height: "16.42%",
+//               }}
+//             />
+//           )}
+
+//           {/* Dynamic QR — replaces the QR printed in the artwork */}
+//           <Link
+//             to={`/verify/${vendor.applicationNo}`}
+//             className="absolute flex items-center justify-center bg-white"
+//             style={{
+//               left: "52.78%",
+//               top: "27.99%",
+//               width: "22.5%",
+//               height: "15.11%",
+//             }}
+//           >
+//             <QRCodeSVG
+//               value={verifyUrl}
+//               size={78}
+//               level="M"
+//               bgColor="#FFFFFF"
+//               fgColor="#111111"
+//               className="h-full w-full"
+//             />
+//           </Link>
+
+//           {/* Dynamic values only.
+//               Labels, dotted lines, header, title, border and signature
+//               are already part of vvcmccardbg.png. */}
+
+//           <div className="absolute" style={{ left: "41.94%", top: "46.64%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {certificate.certificateNo || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "50.56%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.personal.fullName || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "54.1%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {`${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे`}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "57.65%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {genderType(vendor.personal.gender)}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "61.19%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.address.permanentAddress || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "67.91%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.personal.mobile || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "71.46%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.business.businessType || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "75%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {saleType(vendor.business.vendorType)}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "78.54%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.address.zone || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "82.09%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.address.ward || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "85.63%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {vendor.business.businessTiming || ""}
+//             </span>
+//           </div>
+
+//           <div className="absolute" style={{ left: "41.94%", top: "89.18%", width: "39%" }}>
+//             <span className="block truncate whitespace-nowrap text-[10px] font-bold leading-[1.15] text-slate-800">
+//               {`${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}`}
+//             </span>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button
+//           variant="ghost"
+//           icon={FiExternalLink}
+//           onClick={() => navigate(`/verify/${vendor.applicationNo}`)}
+//         >
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           html,
+//           body {
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             margin: 0 !important;
+//             padding: 0 !important;
+//             background: #ffffff !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           body * {
+//             visibility: hidden;
+//           }
+
+//           .smart-card,
+//           .smart-card * {
+//             visibility: visible;
+//           }
+
+//           .smart-card {
+//             position: relative !important;
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             max-width: none !important;
+//             aspect-ratio: 360 / 536 !important;
+//             margin: 0 !important;
+//             border: 0 !important;
+//             border-radius: 0 !important;
+//             box-shadow: none !important;
+//             overflow: hidden !important;
+//             background-size: 100% 100% !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             -webkit-print-color-adjust: exact !important;
+//             print-color-adjust: exact !important;
+//           }
+
+//           @page {
+//             size: 80mm 119.111mm;
+//             margin: 0 !important;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+// ============================
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       {/* Background decoration (green header banner, title block, borders,
+//           shadow, gold divider, signature footer) removed — replaced with the
+//           vvcmccardbg artwork + dimensions used in the main version. */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto overflow-hidden"
+//           style={{
+//             width: "360px",
+//             aspectRatio: "360 / 536",
+//             backgroundImage: `url(${vvcmccardbg})`,
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             backgroundSize: "100% 100%",
+//           }}
+//         >
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4 pt-4">
+//             <div className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-white bg-white">
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           html,
+//           body {
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             margin: 0 !important;
+//             padding: 0 !important;
+//             background: #ffffff !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           body * {
+//             visibility: hidden;
+//           }
+
+//           .smart-card,
+//           .smart-card * {
+//             visibility: visible;
+//           }
+
+//           .smart-card {
+//             position: relative !important;
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             max-width: none !important;
+//             aspect-ratio: 360 / 536 !important;
+//             margin: 0 !important;
+//             border: 0 !important;
+//             border-radius: 0 !important;
+//             box-shadow: none !important;
+//             overflow: hidden !important;
+//             background-size: 100% 100% !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             -webkit-print-color-adjust: exact !important;
+//             print-color-adjust: exact !important;
+//           }
+
+//           @page {
+//             size: 80mm 119.111mm;
+//             margin: 0 !important;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       {/* Background decoration (green header banner, title block, borders,
+//           shadow, gold divider, signature footer) removed — replaced with the
+//           vvcmccardbg artwork + dimensions used in the main version. */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto overflow-hidden"
+//           style={{
+//             width: "360px",
+//             aspectRatio: "360 / 536",
+//             backgroundImage: `url(${vvcmccardbg})`,
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             backgroundSize: "100% 100%",
+//           }}
+//         >
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4 pt-4">
+//             <div className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-white bg-white">
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           html,
+//           body {
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             margin: 0 !important;
+//             padding: 0 !important;
+//             background: #ffffff !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           body * {
+//             visibility: hidden;
+//           }
+
+//           .smart-card,
+//           .smart-card * {
+//             visibility: visible;
+//           }
+
+//           .smart-card {
+//             position: relative !important;
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             max-width: none !important;
+//             aspect-ratio: 360 / 536 !important;
+//             margin: 0 !important;
+//             border: 0 !important;
+//             border-radius: 0 !important;
+//             box-shadow: none !important;
+//             overflow: hidden !important;
+//             background-size: 100% 100% !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             -webkit-print-color-adjust: exact !important;
+//             print-color-adjust: exact !important;
+//           }
+
+//           @page {
+//             size: 80mm 119.111mm;
+//             margin: 0 !important;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import logo from "../../../assets/logovvcmc.jpg";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    COLORS
+// ========================================================= */
+
+// const GREEN = "#1E7A3D";
+// const GOLD = "#CA9E3A";
+// const ORANGE = "#C1622A";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto w-full max-w-[380px] overflow-hidden rounded-2xl border-2 bg-white shadow-[0_18px_44px_rgba(0,65,65,.18)]"
+//           style={{ borderColor: GREEN }}
+//         >
+//           {/* ── Top header banner ── */}
+//           <div className="relative overflow-hidden" style={{ backgroundColor: GREEN }}>
+//             {/* thin gold wave under the header */}
+//             <div className="absolute inset-x-0 bottom-0 h-[6px]" style={{ backgroundColor: GOLD }} />
+//             <div className="flex items-center gap-2.5 px-4 py-3">
+//               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white p-0.5 shadow-sm">
+//                 <img src={logo} alt="VVCMC" className="h-full w-full rounded-full object-contain" />
+//               </div>
+//               <h2 className="text-[13px] font-black leading-tight text-white">वसई-विरार शहर महानगरपालिका</h2>
+//             </div>
+//           </div>
+
+//           {/* ── Title block ── */}
+//           <div className="px-4 pb-3 pt-4 text-center">
+//             <h3 className="text-[19px] font-black" style={{ color: GREEN }}>
+//               रस्ता विक्रेता ओळखपत्र
+//             </h3>
+//             <p className="text-[12px] font-bold" style={{ color: ORANGE }}>
+//               (Street Vendor Identity Card)
+//             </p>
+//             <div className="mx-auto mt-2 h-px w-full" style={{ backgroundColor: GOLD }} />
+//           </div>
+
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4">
+//             <div
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 bg-white"
+//               style={{ borderColor: GREEN }}
+//             >
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── divider gap, matching the reference's blank spacer line ── */}
+//           <div className="px-5">
+//             <div className="h-px bg-slate-200" />
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Footer: signature line ── */}
+//           <div className="border-t px-5 py-3 text-center" style={{ borderColor: GOLD }}>
+//             <p className="text-[11px] font-bold" style={{ color: GREEN }}>
+//               अधिकृत स्वाक्षरी
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           body {
+//             background: white !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           .smart-card {
+//             width: 80mm !important;
+//             height: auto !important;
+//             max-width: none !important;
+//             border-radius: 3mm !important;
+//             box-shadow: none !important;
+//             overflow: visible !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             margin: 0 auto !important;
+//           }
+
+//           @page {
+//             size: A4 portrait;
+//             margin: 12mm;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   return Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[11px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[11px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       {/* Background decoration (green header banner, title block, borders,
+//           shadow, gold divider, signature footer) removed — replaced with the
+//           vvcmccardbg artwork + dimensions used in the main version. */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto overflow-hidden"
+//           style={{
+//             width: "360px",
+//             aspectRatio: "360 / 536",
+//             backgroundImage: `url(${vvcmccardbg})`,
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             backgroundSize: "100% 100%",
+//           }}
+//         >
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-4 pt-4">
+//             <div className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-white bg-white">
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={40} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[86px] w-[86px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={78} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1.5 px-5 pb-3">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1.5 px-5 pb-4 pt-3">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           html,
+//           body {
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             margin: 0 !important;
+//             padding: 0 !important;
+//             background: #ffffff !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           body * {
+//             visibility: hidden;
+//           }
+
+//           .smart-card,
+//           .smart-card * {
+//             visibility: visible;
+//           }
+
+//           .smart-card {
+//             position: relative !important;
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             max-width: none !important;
+//             aspect-ratio: 360 / 536 !important;
+//             margin: 0 !important;
+//             border: 0 !important;
+//             border-radius: 0 !important;
+//             box-shadow: none !important;
+//             overflow: hidden !important;
+//             background-size: 100% 100% !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             -webkit-print-color-adjust: exact !important;
+//             print-color-adjust: exact !important;
+//           }
+
+//           @page {
+//             size: 80mm 119.111mm;
+//             margin: 0 !important;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// import { useEffect, useMemo, useState } from "react";
+// import { Link, useNavigate, useParams } from "react-router-dom";
+// import { QRCodeSVG } from "qrcode.react";
+
+// import {
+//   FiDownload,
+//   FiPrinter,
+//   FiUser,
+//   FiExternalLink,
+//   FiShield,
+//   FiLoader,
+// } from "react-icons/fi";
+
+// import Card from "../../../components/ui/Card";
+// import Button from "../../../components/ui/Button";
+
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+// // NOTE: point this at the same logo file used in the sidebar
+// // (the round VVCMC emblem). Adjust the path if it lives elsewhere.
+// // import vvcmcLogo from "../../../assets/logo.png";
+// import logo from "../../../assets/logovvcmc.jpg";
+
+// import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
+
+
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
+
+// function formatDate(d) {
+//   if (!d) return "-";
+//   const date = new Date(d);
+//   if (Number.isNaN(date.getTime())) return "-";
+//   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+// }
+
+// function calcAge(dob) {
+//   if (!dob) return "-";
+//   const birth = new Date(dob);
+//   if (Number.isNaN(birth.getTime())) return "-";
+//   const age = Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+//   // guard against bad/future dates instead of showing a negative number
+//   return age >= 0 ? age : "-";
+// }
+
+// function saleType(vendorType) {
+//   if (!vendorType) return "-";
+//   return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
+// }
+
+// function genderType(gender) {
+//   if (!gender) return "-";
+//   const value = gender.toLowerCase();
+//   if (value === "male") return "पुरुष";
+//   if (value === "female") return "स्त्री";
+//   if (value === "other") return "इतर";
+//   return gender;
+// }
+
+
+// /* =========================================================
+//    ONE LABELLED FIELD ROW — "label : ____value____" with a
+//    dotted underline, matching the reference card exactly.
+// ========================================================= */
+
+// function CardField({ label, value }) {
+//   return (
+//     <div className="flex items-baseline gap-1.5">
+//       <span className="shrink-0 text-[10.5px] font-semibold text-[#1E1E1E]">{label}</span>
+//       <span className="shrink-0 text-[10.5px] font-semibold text-[#1E1E1E]">:</span>
+//       <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[10.5px] font-bold text-slate-800">
+//         {value || "\u00A0"}
+//       </span>
+//     </div>
+//   );
+// }
+
+
+// /* =========================================================
+//    MAIN COMPONENT
+// ========================================================= */
+
+// export default function SmartCard() {
+//   const { id: applicationNo } = useParams();
+//   const navigate = useNavigate();
+
+//   /* ==================== API DATA ==================== */
+
+//   const [vendor, setVendor] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   useEffect(() => {
+//     let cancelled = false;
+//     setLoading(true);
+//     setError("");
+
+//     fetchVendorApplicationByNo(applicationNo).then((result) => {
+//       if (cancelled) return;
+//       setLoading(false);
+
+//       if (!result.success) {
+//         setError(result.message || "Vendor not found.");
+//         return;
+//       }
+
+//       setVendor(result.data);
+//     });
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [applicationNo]);
+
+//   const certificate = vendor?.certificate;
+
+//   /* ==================== VERIFICATION URL ==================== */
+
+//   const verifyUrl = useMemo(() => {
+//     if (certificate?.qrCodeData) return certificate.qrCodeData;
+//     if (!vendor) return "";
+//     return `${window.location.origin}/verify/${vendor.applicationNo}`;
+//   }, [vendor, certificate]);
+
+//   const cardCode = certificate?.certificateNo || "";
+
+//   /* ==================== LOADING ==================== */
+
+//   if (loading) {
+//     return (
+//       <Card className="mx-auto flex max-w-md flex-col items-center gap-2 py-14 text-center text-sm text-ink-400">
+//         <FiLoader className="animate-spin" size={20} />
+//         Loading...
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== VENDOR NOT FOUND ==================== */
+
+//   if (error || !vendor) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+//         <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
+//           Back to Vendor List
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
+
+//   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
+//     return (
+//       <Card className="mx-auto max-w-md text-center">
+//         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
+//         <p className="text-sm font-semibold text-ink-700">
+//           The Smart Card is only available once payment is complete and the certificate has been issued.
+//         </p>
+//         <p className="mt-1 text-xs text-ink-500">
+//           Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
+//         </p>
+//         <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
+//           View Vendor Profile
+//         </Link>
+//       </Card>
+//     );
+//   }
+
+//   /* ==================== ACTIONS ==================== */
+
+//   const handlePrint = () => window.print();
+//   const handleDownloadPdf = () => window.print();
+
+//   /* ==================== CARD FIELDS — same order as the reference ==================== */
+
+//   const cardFields = [
+//     { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+//     { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+//     { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+//     { label: "लिंग", value: genderType(vendor.personal.gender) },
+//     { label: "पत्ता", value: vendor.address.permanentAddress },
+//   ];
+
+//   const cardFields2 = [
+//     { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+//     { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+//     { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+//     { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+//     { label: "प्रभाग / ward", value: vendor.address.ward },
+//     { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+//     { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
+//   ];
+
+//   /* ==================== PAGE ==================== */
+
+//   return (
+//     <div className="space-y-5">
+//       {/* ================= PAGE HEADER ================= */}
+//       <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
+//         <div>
+//           <p className="text-xs font-semibold text-ink-500">
+//             <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
+//               Smart Card
+//             </Link>
+//             {" / "}
+//             {cardCode}
+//           </p>
+//           <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
+//         </div>
+
+//         <div className="flex gap-2">
+//           <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
+//             Download
+//           </Button>
+//           <Button icon={FiPrinter} onClick={handlePrint}>
+//             Print
+//           </Button>
+//         </div>
+//       </div>
+
+//       {/* ================= CARD PREVIEW ================= */}
+//       <div className="flex flex-col items-center gap-8 px-1 py-6">
+//         <div
+//           className="smart-card relative mx-auto flex flex-col overflow-hidden"
+//           style={{
+//             width: "360px",
+//             aspectRatio: "360 / 536",
+//             backgroundImage: `url(${vvcmccardbg})`,
+//             backgroundRepeat: "no-repeat",
+//             backgroundPosition: "center",
+//             backgroundSize: "100% 100%",
+//           }}
+//         >
+//           {/* ── Corporation header (logo + name) — sits on the green band ── */}
+//           {/* <div className="flex flex-col items-center gap-1 px-6 pt-3">
+//             <img
+//               src={logo}
+//               alt="VVCMC"
+//               className="h-9 w-9 rounded-full border border-white bg-white object-contain p-[2px]"
+//             />
+//             <p className="text-center text-[11px] font-bold leading-[13px] text-white drop-shadow-sm">
+//               वसई-विरार शहर महानगरपालिका
+//             </p>
+//           </div> */}
+
+//           <div className="flex flex-row items-center gap-2 px-4 pt-2.5">
+//   <img
+//     src={logo}
+//     alt="VVCMC"
+//     className="h-9 w-9 shrink-0 rounded-full border border-white bg-white object-contain p-[2px]"
+//   />
+//   <p className="flex-1 text-left text-[14px] font-bold leading-[13px] text-white drop-shadow-sm">
+//     वसई-विरार शहर महानगरपालिका
+//   </p>
+// </div>
+
+//           {/* ── Card title ── */}
+//           <div className="flex flex-col items-center gap-0.5 px-6 mt-6 pb-1 pt-2">
+//             <h2 className="text-center text-[15px] font-extrabold leading-tight text-[#0B5D30]">
+//               रस्ता विक्रेता ओळखपत्र
+//             </h2>
+//             <p className="text-center text-[9.5px] font-semibold italic text-[#B9861C]">
+//               (Street Vendor Identity Card)
+//             </p>
+//             <div className="mt-1 h-px w-28 bg-[#C9A227]" />
+//           </div>
+
+//           {/* ── Photo + QR ── */}
+//           <div className="flex items-start justify-center gap-6 px-4 pb-3 pt-3">
+//             <div className="flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-[#0B5D30] bg-white">
+//               {vendor.documents?.photo ? (
+//                 <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+//               ) : (
+//                 <FiUser size={36} strokeWidth={1.2} className="text-slate-300" />
+//               )}
+//             </div>
+
+//             <Link
+//               to={`/verify/${vendor.applicationNo}`}
+//               className="flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+//             >
+//               <QRCodeSVG value={verifyUrl} size={72} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+//             </Link>
+//           </div>
+
+//           {/* ── Field list — top group ── */}
+//           <div className="space-y-1 px-5 pb-2">
+//             {cardFields.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Field list — bottom group ── */}
+//           <div className="space-y-1 px-5 pb-2 pt-2">
+//             {cardFields2.map((f) => (
+//               <CardField key={f.label} label={f.label} value={f.value} />
+//             ))}
+//           </div>
+
+//           {/* ── Footer signature ── */}
+//           <div className="mt-auto flex flex-col items-center gap-1 pb-4 pt-2">
+//             <div className="h-px w-32 bg-slate-500" />
+//             <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">अधिकृत स्वाक्षरी</p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* ================= VERIFICATION ================= */}
+//       <div className="flex justify-center print:hidden">
+//         <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
+//           Open Verification Screen
+//         </Button>
+//       </div>
+
+//       {/* ================= PRINT CSS ================= */}
+//       <style>{`
+//         @media print {
+//           html,
+//           body {
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             margin: 0 !important;
+//             padding: 0 !important;
+//             background: #ffffff !important;
+//           }
+
+//           header,
+//           aside,
+//           nav,
+//           .print\\:hidden {
+//             display: none !important;
+//           }
+
+//           body * {
+//             visibility: hidden;
+//           }
+
+//           .smart-card,
+//           .smart-card * {
+//             visibility: visible;
+//           }
+
+//           .smart-card {
+//             position: relative !important;
+//             width: 80mm !important;
+//             height: 119.111mm !important;
+//             max-width: none !important;
+//             aspect-ratio: 360 / 536 !important;
+//             margin: 0 !important;
+//             border: 0 !important;
+//             border-radius: 0 !important;
+//             box-shadow: none !important;
+//             overflow: hidden !important;
+//             background-size: 100% 100% !important;
+//             break-inside: avoid !important;
+//             page-break-inside: avoid !important;
+//             -webkit-print-color-adjust: exact !important;
+//             print-color-adjust: exact !important;
+//           }
+
+//           @page {
+//             size: 80mm 119.111mm;
+//             margin: 0 !important;
+//           }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }
+
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
@@ -10666,12 +14925,6 @@ import {
   FiDownload,
   FiPrinter,
   FiUser,
-  FiBriefcase,
-  FiShoppingBag,
-  FiMapPin,
-  FiHome,
-  FiClock,
-  FiCalendar,
   FiExternalLink,
   FiShield,
   FiLoader,
@@ -10680,18 +14933,14 @@ import {
 import Card from "../../../components/ui/Card";
 import Button from "../../../components/ui/Button";
 
+import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+// NOTE: point this at the same logo file used in the sidebar
+// (the round VVCMC emblem). Adjust the path if it lives elsewhere.
+// import vvcmcLogo from "../../../assets/logo.png";
 import logo from "../../../assets/logovvcmc.jpg";
-import streetVendorBg from "../../../assets/street-vendor-bg.jpg";
+// import vvcmccardbg from "../../../assets/vvcmcbgcard2.png";
+
 import { fetchVendorApplicationByNo } from "../../../services/vendorApplicationService";
-
-
-/* =========================================================
-   COLORS
-========================================================= */
-
-const TEAL = "#004C4D";
-const GOLD = "#CA9E3A";
-const CREAM = "#FBFAF6";
 
 
 /* =========================================================
@@ -10700,347 +14949,46 @@ const CREAM = "#FBFAF6";
 
 function formatDate(d) {
   if (!d) return "-";
-
   const date = new Date(d);
-
-  if (Number.isNaN(date.getTime())) {
-    return "-";
-  }
-
-  return date.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
-
 
 function calcAge(dob) {
   if (!dob) return "-";
-
   const birth = new Date(dob);
-
-  if (Number.isNaN(birth.getTime())) {
-    return "-";
-  }
-
-  return Math.floor(
-    (Date.now() - birth.getTime()) /
-      (365.25 * 24 * 60 * 60 * 1000)
-  );
+  if (Number.isNaN(birth.getTime())) return "-";
+  const age = Math.floor((Date.now() - birth.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+  // guard against bad/future dates instead of showing a negative number
+  return age >= 0 ? age : "-";
 }
-
 
 function saleType(vendorType) {
   if (!vendorType) return "-";
-
-  return vendorType
-    .toLowerCase()
-    .includes("mobile")
-    ? "फिरता"
-    : "स्थिर";
+  return vendorType.toLowerCase().includes("mobile") ? "फिरता" : "स्थिर";
 }
 
 function genderType(gender) {
   if (!gender) return "-";
-
   const value = gender.toLowerCase();
-
   if (value === "male") return "पुरुष";
   if (value === "female") return "स्त्री";
   if (value === "other") return "इतर";
-
   return gender;
 }
 
 
 /* =========================================================
-   LEFT GREEN / GOLD RIBBON
+   ONE LABELLED FIELD ROW — "label : ____value____" with a
+   dotted underline, matching the reference card exactly.
 ========================================================= */
 
-function SideRibbon() {
+function CardField({ label, value }) {
   return (
-    <div
-      className="
-        pointer-events-none
-        absolute
-        inset-y-0
-        left-0
-        z-10
-        w-[15%]
-        overflow-hidden
-      "
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 150 540"
-        preserveAspectRatio="none"
-        className="h-full w-full"
-      >
-
-        {/* =====================================================
-            TEAL SIDE PANEL
-            Narrow at top → wide flowing curve at bottom
-        ===================================================== */}
-
-        <path
-          d="
-            M0 0
-            H70
-
-            C
-              62 35,
-              55 75,
-              53 115
-
-            C
-              50 165,
-              49 215,
-              51 265
-
-            C
-              53 315,
-              59 365,
-              70 410
-
-            C
-              82 460,
-              101 505,
-              125 540
-
-            H0
-            Z
-          "
-          fill={TEAL}
-        />
-
-        {/* =====================================================
-            GOLD CURVE
-            Exactly follows the outer teal boundary
-        ===================================================== */}
-
-        <path
-          d="
-            M70 0
-
-            C
-              62 35,
-              55 75,
-              53 115
-
-            C
-              50 165,
-              49 215,
-              51 265
-
-            C
-              53 315,
-              59 365,
-              70 410
-
-            C
-              82 460,
-              101 505,
-              125 540
-          "
-          fill="none"
-          stroke={GOLD}
-          strokeWidth="8"
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
-
-      </svg>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   BOTTOM GREEN / GOLD CURVE
-========================================================= */
-
-function BottomCurve() {
-  return (
-    <div
-      className="
-        pointer-events-none
-        absolute
-        bottom-0
-        right-0
-        z-[5]
-        h-[18%]
-        w-[43%]
-        overflow-hidden
-      "
-      aria-hidden="true"
-    >
-
-      <svg
-        viewBox="0 0 400 100"
-        preserveAspectRatio="none"
-        className="h-full w-full"
-      >
-
-        <path
-          d="
-            M0 100
-            C100 5 240 80 400 0
-            L400 100
-            Z
-          "
-          fill={TEAL}
-        />
-
-        <path
-          d="
-            M0 100
-            C100 5 240 80 400 0
-          "
-          fill="none"
-          stroke={GOLD}
-          strokeWidth="8"
-        />
-
-      </svg>
-
-    </div>
-  );
-}
-
-
-/* =========================================================
-   FRONT FIELD
-========================================================= */
-
-function FrontField({ label, value }) {
-  return (
-    <div className="flex min-w-0 items-center gap-2">
-      {/* LABEL */}
-      <span
-        className="
-          w-[42%]
-          shrink-0
-          truncate
-          text-[13px]
-          font-black
-          uppercase
-          tracking-[0.02em]
-          text-[#0B4D52]
-        "
-      >
-        {label}
-      </span>
-
-      {/* COLON */}
-      <span
-        className="
-          shrink-0
-          text-[11px]
-          font-black
-          text-[#0B4D52]
-        "
-      >
-        :
-      </span>
-
-      {/* VALUE */}
-      <span
-        className="
-          min-w-0
-          flex-1
-          truncate
-          border-b
-          border-slate-400
-          pb-[4px]
-          text-[13px]
-          font-extrabold
-          leading-tight
-          text-slate-900
-        "
-      >
-        {value || "\u00A0"}
-      </span>
-    </div>
-  );
-}
-
-
-/* =========================================================
-   BACK FIELD
-========================================================= */
-
-function BackField({
-  icon: Icon,
-  label,
-  value,
-}) {
-  return (
-    <div className="flex min-w-0 items-center gap-2">
-
-      {/* ICON */}
-      <div
-        className="
-          flex
-          h-6
-          w-6
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          bg-[#E8F0EC]
-        "
-      >
-        <Icon
-          size={12}
-          strokeWidth={2.5}
-          className="text-[#0B4D52]"
-        />
-      </div>
-
-      {/* LABEL */}
-      <span
-        className="
-          w-[42%]
-          shrink-0
-          truncate
-          text-[13px]
-          font-black
-          uppercase
-          tracking-[0.01em]
-          text-[#0B4D52]
-        "
-      >
-        {label}
-      </span>
-
-      {/* COLON */}
-      <span
-        className="
-          shrink-0
-          text-[11px]
-          font-black
-          text-[#0B4D52]
-        "
-      >
-        :
-      </span>
-
-      {/* VALUE */}
-      <span
-        className="
-          min-w-0
-          flex-1
-          truncate
-          border-b
-          border-slate-200
-          pb-[4px]
-          text-[13px]
-          font-extrabold
-          leading-tight
-          text-slate-900
-        "
-      >
+    <div className="flex items-baseline gap-1.5">
+      <span className="shrink-0 text-[10.5px] font-semibold text-[#1E1E1E]">{label}</span>
+      <span className="shrink-0 text-[10.5px] font-semibold text-[#1E1E1E]">:</span>
+      <span className="min-w-0 flex-1 truncate border-b border-dotted border-slate-500 pb-[1px] text-[10.5px] font-bold text-slate-800">
         {value || "\u00A0"}
       </span>
     </div>
@@ -11056,10 +15004,7 @@ export default function SmartCard() {
   const { id: applicationNo } = useParams();
   const navigate = useNavigate();
 
-
-  /* =======================================================
-     API DATA (replaces Redux selectors)
-  ======================================================= */
+  /* ==================== API DATA ==================== */
 
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11089,12 +15034,7 @@ export default function SmartCard() {
 
   const certificate = vendor?.certificate;
 
-
-  /* =======================================================
-     VERIFICATION URL
-     Reuses the same QR data the backend generated at
-     payment time, so the QR on the card matches exactly.
-  ======================================================= */
+  /* ==================== VERIFICATION URL ==================== */
 
   const verifyUrl = useMemo(() => {
     if (certificate?.qrCodeData) return certificate.qrCodeData;
@@ -11102,17 +15042,9 @@ export default function SmartCard() {
     return `${window.location.origin}/verify/${vendor.applicationNo}`;
   }, [vendor, certificate]);
 
-
-  /* =======================================================
-     CARD CODE
-  ======================================================= */
-
   const cardCode = certificate?.certificateNo || "";
 
-
-  /* =======================================================
-     LOADING
-  ======================================================= */
+  /* ==================== LOADING ==================== */
 
   if (loading) {
     return (
@@ -11123,950 +15055,234 @@ export default function SmartCard() {
     );
   }
 
-
-  /* =======================================================
-     VENDOR NOT FOUND
-  ======================================================= */
+  /* ==================== VENDOR NOT FOUND ==================== */
 
   if (error || !vendor) {
     return (
       <Card className="mx-auto max-w-md text-center">
-
-        <p className="text-sm text-ink-500">
-          {error || "Vendor not found."}
-        </p>
-
-        <Link
-          to="/vendors/list"
-          className="
-            mt-3
-            inline-block
-            text-sm
-            font-semibold
-            text-brand-600
-          "
-        >
+        <p className="text-sm text-ink-500">{error || "Vendor not found."}</p>
+        <Link to="/vendors/list" className="mt-3 inline-block text-sm font-semibold text-brand-600">
           Back to Vendor List
         </Link>
-
       </Card>
     );
   }
 
-
-  /* =======================================================
-     CERTIFICATE NOT YET ISSUED
-  ======================================================= */
+  /* ==================== CERTIFICATE NOT YET ISSUED ==================== */
 
   if (vendor.status !== "Certificate Issued" || !certificate?.certificateNo) {
     return (
       <Card className="mx-auto max-w-md text-center">
-
         <FiShield className="mx-auto mb-3 text-ink-300" size={32} />
-
         <p className="text-sm font-semibold text-ink-700">
           The Smart Card is only available once payment is complete and the certificate has been issued.
         </p>
-
         <p className="mt-1 text-xs text-ink-500">
-          Current status:
-          <span className="ml-1 font-semibold">
-            {vendor.status}
-          </span>
+          Current status: <span className="ml-1 font-semibold">{vendor.status}</span>
         </p>
-
-        <Link
-          to={`/vendors/profile/${vendor.applicationNo}`}
-          className="
-            mt-4
-            inline-block
-            text-sm
-            font-semibold
-            text-brand-600
-          "
-        >
+        <Link to={`/vendors/profile/${vendor.applicationNo}`} className="mt-4 inline-block text-sm font-semibold text-brand-600">
           View Vendor Profile
         </Link>
-
       </Card>
     );
   }
 
+  /* ==================== ACTIONS ==================== */
 
-  /* =======================================================
-     ACTIONS
-  ======================================================= */
+  const handlePrint = () => window.print();
+  const handleDownloadPdf = () => window.print();
 
-  const handlePrint = () => {
-    window.print();
-  };
+  /* ==================== CARD FIELDS — same order as the reference ==================== */
 
-
-  const handleDownloadPdf = () => {
-    window.print();
-  };
-
-
-  /* =======================================================
-     FRONT DATA
-  ======================================================= */
-
-  const frontFields = [
-    {
-      label: "ओळखपत्र क्रमांक",
-      value: certificate.certificateNo,
-    },
-    {
-      label: "विक्रेत्याचे नाव",
-      value: vendor.personal.fullName,
-    },
-    {
-      label: "जन्मतारीख / वय",
-      value: `${formatDate(vendor.personal.dob)} / ${calcAge(
-        vendor.personal.dob
-      )} वर्षे`,
-    },
-    {
-      label: "लिंग",
-      value: genderType(vendor.personal.gender),
-    },
-    {
-      label: "पत्ता",
-      value: vendor.address.permanentAddress,
-    },
-    {
-      label: "मोबाईल क्रमांक",
-      value: vendor.personal.mobile,
-    },
+  const cardFields = [
+    { label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+    { label: "विक्रेत्याचे नाव", value: vendor.personal.fullName },
+    { label: "जन्मतारीख / वय", value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे` },
+    { label: "लिंग", value: genderType(vendor.personal.gender) },
+    { label: "पत्ता", value: vendor.address.permanentAddress },
   ];
 
-
-  /* =======================================================
-     BACK DATA
-  ======================================================= */
-
-  const backFields = [
-    {
-      icon: FiBriefcase,
-      label: "व्यवसायाचा प्रकार",
-      value: vendor.business.businessType,
-    },
-
-    {
-      icon: FiShoppingBag,
-      label: "विक्रीचा प्रकार",
-      value: saleType(vendor.business.vendorType),
-    },
-
-    {
-      icon: FiMapPin,
-      label: "विक्रय स्थान",
-      value: vendor.address.zone,
-    },
-
-    {
-      icon: FiHome,
-      label: "विभाग / प्रभाग",
-      value: vendor.address.ward,
-    },
-
-    {
-      icon: FiClock,
-      label: "व्यवसायाची वेळ",
-      value: vendor.business.businessTiming,
-    },
-
-    {
-      icon: FiCalendar,
-      label: "ओळखपत्राची वैधता",
-      value: `${formatDate(certificate.issueDate)} - ${formatDate(
-        certificate.validTill
-      )}`,
-    },
+  const cardFields2 = [
+    { label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
+    { label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
+    { label: "विक्रीचा प्रकार", value: saleType(vendor.business.vendorType) },
+    { label: "विक्रीचे ठिकाण (Vending Zone)", value: vendor.address.zone },
+    { label: "प्रभाग / ward", value: vendor.address.ward },
+    { label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
+    { label: "ओळखपत्र वैधता", value: `${formatDate(certificate.issueDate)} - ${formatDate(certificate.validTill)}` },
   ];
 
-
-  /* =======================================================
-     PAGE
-  ======================================================= */
+  /* ==================== PAGE ==================== */
 
   return (
     <div className="space-y-5">
-
-
-      {/* ==================================================
-          PAGE HEADER
-      ================================================== */}
-
-      <div
-        className="
-          flex
-          flex-wrap
-          items-start
-          justify-between
-          gap-4
-          print:hidden
-        "
-      >
-
+      {/* ================= PAGE HEADER ================= */}
+      <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
         <div>
-
-          <p
-            className="
-              text-xs
-              font-semibold
-              text-ink-500
-            "
-          >
-
-            <Link
-              to="/vendors/list"
-              className="
-                text-brand-600
-                hover:text-brand-700
-              "
-            >
+          <p className="text-xs font-semibold text-ink-500">
+            <Link to="/vendors/list" className="text-brand-600 hover:text-brand-700">
               Smart Card
             </Link>
-
             {" / "}
-
             {cardCode}
-
           </p>
-
-
-          <h1
-            className="
-              mt-1
-              font-display
-              text-2xl
-              font-bold
-              text-ink-900
-            "
-          >
-            पथविक्रेता ओळखपत्र
-          </h1>
-
-
-          <p
-            className="
-              text-sm
-              text-ink-500
-            "
-          >
-            आधार कार्डच्या आकाराचे महानगरपालिका ओळखपत्र
-          </p>
-
+          <h1 className="mt-1 font-display text-2xl font-bold text-ink-900">पथविक्रेता ओळखपत्र</h1>
         </div>
-
-
-        {/* ACTIONS */}
 
         <div className="flex gap-2">
-
-          <Button
-            variant="outline"
-            icon={FiDownload}
-            onClick={handleDownloadPdf}
-          >
+          <Button variant="outline" icon={FiDownload} onClick={handleDownloadPdf}>
             Download
           </Button>
-
-          <Button
-            icon={FiPrinter}
-            onClick={handlePrint}
-          >
+          <Button icon={FiPrinter} onClick={handlePrint}>
             Print
           </Button>
-
         </div>
-
       </div>
 
-
-      {/* ==================================================
-          CARD PREVIEW
-      ================================================== */}
-
-      <div
-        className="
-          flex
-          flex-col
-          items-center
-          gap-8
-          px-1
-          py-6
-        "
-      >
-
-
-        {/* =================================================
-            FRONT CARD
-        ================================================= */}
-
+      {/* ================= CARD PREVIEW ================= */}
+      <div className="flex flex-col items-center gap-8 px-1 py-6">
         <div
-          className="
-            smart-card
-            smart-card-front
-            relative
-            mx-auto
-            aspect-[856/540]
-            w-full
-            max-w-[640px]
-            overflow-hidden
-            rounded-2xl
-            border
-            border-[#004C4D]/15
-            shadow-[0_18px_44px_rgba(0,65,65,.18)]
-          "
+          className="smart-card relative mx-auto flex flex-col overflow-hidden"
           style={{
-            backgroundImage: `
-              linear-gradient(
-                90deg,
-                rgba(251,250,246,0.98) 0%,
-                rgba(251,250,246,0.94) 38%,
-                rgba(251,250,246,0.72) 65%,
-                rgba(251,250,246,0.30) 100%
-              ),
-              url(${streetVendorBg})
-            `,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            width: "360px",
+            aspectRatio: "360 / 536",
+            backgroundImage: `url(${vvcmccardbg})`,
             backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundSize: "100% 100%",
           }}
         >
-
-          {/* LEFT RIBBON */}
-
-          <SideRibbon />
-
-
-          {/* SUBTLE SECURITY PATTERN */}
-
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-0
-              z-[1]
-              opacity-[0.07]
-            "
-            style={{
-              backgroundImage: `
-                repeating-radial-gradient(
-                  ellipse at center,
-                  transparent 0px,
-                  transparent 12px,
-                  rgba(0,76,77,.20) 13px,
-                  transparent 14px
-                )
-              `,
-            }}
-          />
-
-
-          {/* FRONT CONTENT */}
-
-          <div
-            className="
-              relative
-              z-20
-              flex
-              h-full
-              flex-col
-              pl-[10%]
-              pr-[3%]
-              py-[4%]
-            "
-          >
-
-
-            {/* ==========================================
-                HEADER
-            ========================================== */}
-
-            <div
-              className="
-                flex
-                shrink-0
-                items-center
-                gap-3
-              "
-            >
-
-              {/* LOGO */}
-
-              <div
-                className="
-                  flex
-                  h-12
-                  w-12
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-white
-                  p-1
-                  shadow-sm
-                  ring-1
-                  ring-[#005050]/15
-                "
-              >
-
-                <img
-                  src={logo}
-                  alt="VVCMC"
-                  className="
-                    h-full
-                    w-full
-                    rounded-full
-                    object-contain
-                  "
-                />
-
-              </div>
-
-
-              {/* TITLE */}
-
-              <div className="min-w-0">
-
-                <h1
-                  className="
-                    font-display
-                    text-[20px]
-                    font-black
-                    leading-none
-                    text-[#0B4D52]
-                  "
-                >
-                  वसई विरार शहर महानगरपालिका
-                </h1>
-
-
-
-                <div
-                  className="
-                    mt-1.5
-                    flex
-                    items-center
-                    gap-2
-                    text-[10px]
-                    font-bold
-                    uppercase
-                    tracking-[0.12em]
-                    text-[#CA9E3A]
-                  "
-                >
-
-                  <span className="h-px w-5 bg-[#CA9E3A]/90" />
-
-                  पथविक्रेता व्यवस्थापन प्रणाली
-
-                  <span className="h-px w-5 bg-[#CA9E3A]/60" />
-
-                </div>
-
-              </div>
-
-            </div>
-
-
-            {/* ==========================================
-                FRONT BODY
-                SAME SPACING AS BACK
-            ========================================== */}
-
-            <div
-              className="
-                mt-3
-                flex
-                min-h-0
-                flex-1
-                items-center
-              "
-            >
-
-
-              {/* ========================================
-                  PHOTO
-              ======================================== */}
-
-              <div
-                className="
-                  relative
-                  z-10
-                  flex
-                  h-[60%]
-                  w-[23%]
-                  shrink-0
-                  items-center
-                  justify-center
-                  overflow-hidden
-                  rounded-xl
-                  border-2
-                  border-[#0B4D52]
-                  bg-white
-                  shadow-sm
-                "
-              >
-
-                {vendor.documents?.photo ? (
-
-                  <img
-                    src={vendor.documents.photo}
-                    alt={vendor.personal.fullName}
-                    className="
-                      h-full
-                      w-full
-                      object-cover
-                    "
-                  />
-
-                ) : (
-
-                  <div
-                    className="
-                      flex
-                      h-full
-                      w-full
-                      flex-col
-                      items-center
-                      justify-center
-                      gap-1
-                    "
-                  >
-
-                    <FiUser
-                      size={40}
-                      strokeWidth={1.2}
-                      className="text-slate-300"
-                    />
-
-                    <span
-                      className="
-                        text-[7px]
-                        font-semibold
-                        uppercase
-                        tracking-wide
-                        text-slate-400
-                      "
-                    >
-                      PHOTO
-                    </span>
-
-                  </div>
-
-                )}
-
-              </div>
-
-
-              {/* ========================================
-                  FRONT INFORMATION
-              ======================================== */}
-
-
-
-              <div
-                className="
-                  ml-4
-                  flex
-                  min-w-0
-                  flex-1
-                  h-[70%]
-                  flex-col
-                  justify-between
-                  self-center
-                "
-              >
-                {frontFields.map(
-                  ({
-                    label,
-                    value,
-                  }) => (
-                    <FrontField
-                      key={label}
-                      label={label}
-                      value={value}
-                    />
-                  )
-                )}
-              </div>
-
-
-              {/* ========================================
-                  QR
-              ======================================== */}
-
-              <Link
-                to={`/verify/${vendor.applicationNo}`}
-                className="
-                  relative
-                  z-10
-                  ml-4
-                  flex
-                  h-[64%]
-                  w-[23%]
-                  max-w-[400px]
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-xl
-                  p-2
-                  shadow-sm
-                  transition-transform
-                  hover:scale-[1.02]
-                "
-              >
-
-                <QRCodeSVG
-                  value={verifyUrl}
-                  size={150}
-                  level="M"
-                  bgColor="#FFFFFF"
-                  fgColor="#111111"
-                  className="
-                    h-full
-                    w-full
-                  "
-                />
-
-              </Link>
-
-            </div>
-
-
-            {/* FRONT CURVE */}
-
-            <BottomCurve />
-
-
-            {/* FRONT MESSAGE */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                bottom-[3.5%]
-                right-[3%]
-                z-20
-                text-right
-                text-white
-              "
-            >
-
-              <p className="text-[5px] font-bold uppercase">
-                Together for
-              </p>
-
-              <p className="text-[5.5px] font-black uppercase">
-                Clean, Safe & Empowered
-              </p>
-
-              <p className="text-[5.5px] font-black uppercase">
-                Street Vendors
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* =================================================
-            BACK CARD
-        ================================================= */}
-
-        <div
-          className="
-            smart-card
-            smart-card-back
-            relative
-            mx-auto
-            aspect-[856/540]
-            w-full
-            max-w-[640px]
-            overflow-hidden
-            rounded-2xl
-            border
-            border-[#004C4D]/15
-            bg-[#FBFAF6]
-            shadow-[0_18px_44px_rgba(0,65,65,.18)]
-          "
-        >
-
-          {/* LEFT RIBBON */}
-
-          <SideRibbon />
-
-
-          {/* BACKGROUND */}
-
-          <div
-            className="
-              absolute
-              inset-0
-              z-0
-              bg-[#FBFAF6]
-            "
-          />
-
-
-          {/* SECURITY PATTERN */}
-
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-0
-              z-[1]
-              opacity-[0.10]
-            "
-            style={{
-              backgroundImage: `
-                repeating-radial-gradient(
-                  ellipse at center,
-                  transparent 0px,
-                  transparent 12px,
-                  rgba(0,76,77,.20) 13px,
-                  transparent 14px
-                )
-              `,
-            }}
-          />
-
-
-          {/* ==========================================
-              BACK CONTENT
-          ========================================== */}
-
-          <div
-            className="
-              relative
-              z-[20]
-              flex
-              h-full
-              pl-[9%]
-              pr-[4%]
-              py-[5%]
-            "
-          >
-
-            {/* BACK FIELDS */}
-
-            <div
-              className="
-                flex
-                min-w-0
-                flex-1
-                flex-col
-                justify-center
-                gap-[5%]
-              "
-            >
-
-              {backFields.map(
-                ({
-                  icon,
-                  label,
-                  value,
-                }) => (
-                  <BackField
-                    key={label}
-                    icon={icon}
-                    label={label}
-                    value={value}
-                  />
-                )
-              )}
-
-            </div>
-
-
-            {/* ========================================
-                WATERMARK
-            ======================================== */}
-
-
-            <div
-              className="
-                relative
-                ml-[3%]
-                flex
-                h-full
-                w-[30%]
-                shrink-0
-                items-center
-                justify-center
-              "
-            >
-              {/* WATERMARK LOGO */}
-              <div
-                className="
-                  relative
-                  z-10
-                  flex
-                  h-[82%]
-                  aspect-square
-                  items-center
-                  justify-center
-                  opacity-[0.26]
-                "
-              >
-                <img
-                  src={logo}
-                  alt=""
-                  className="
-                    h-full
-                    w-full
-                    object-contain
-                  "
-                />
-              </div>
-            </div>
-
-          </div>
-
-
-          {/* BACK CURVE */}
-
-          <BottomCurve />
-
-
-          {/* ========================================
-              AUTHORIZED SIGNATORY
-          ======================================== */}
-
-          <div
-            className="
-              absolute
-              bottom-[4%]
-              left-[13%]
-              z-[20]
-              text-center
-            "
-          >
-
-            <div
-              className="
-                mb-0.5
-                h-px
-                w-20
-                bg-slate-400
-              "
+          {/* ── Corporation header — logo pinned left, name fills the rest ── */}
+          <div className="flex flex-row items-center gap-2 px-4 pt-2.5">
+            <img
+              src={logo}
+              alt="VVCMC"
+              className="h-9 w-9 shrink-0 rounded-full border border-white bg-white object-contain p-[2px]"
             />
-
-            <p
-              className="
-                text-[10px]
-                font-black
-                uppercase
-                tracking-wide
-                text-[#0B4D52]
-
-              "
-            >
-              अधिकृत स्वाक्षरी
+            <p className="flex-1 text-left text-[14px] font-bold leading-[13px] text-white drop-shadow-sm">
+              वसई-विरार शहर महानगरपालिका
             </p>
-
-            <p
-              className="
-                text-[7px]
-                font-bold
-                text-slate-500
-              "
-            >
-              VVCMC
-            </p>
-
           </div>
 
-        </div>
+          {/* ── Card title ── */}
+          <div className="flex flex-col items-center gap-0.5 px-6 pb-1 pt-2 mt-6">
+            <h2 className="text-center text-[15px] font-extrabold leading-tight text-[#0B5D30]">
+              रस्ता विक्रेता ओळखपत्र
+            </h2>
+            <p className="text-center text-[9.5px] font-semibold italic text-[#B9861C]">
+              (Street Vendor Identity Card)
+            </p>
+            <div className="mt-1 h-px w-28 bg-[#C9A227]" />
+          </div>
 
+          {/* ── Photo + QR ── */}
+          <div className="flex items-start justify-center gap-6 px-4 pb-3 pt-3">
+            <div className="flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-[#0B5D30] bg-white">
+              {vendor.documents?.photo ? (
+                <img src={vendor.documents.photo} alt={vendor.personal.fullName} className="h-full w-full object-cover" />
+              ) : (
+                <FiUser size={36} strokeWidth={1.2} className="text-slate-300" />
+              )}
+            </div>
+
+            <Link
+              to={`/verify/${vendor.applicationNo}`}
+              className="flex h-[80px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-md border-2 border-slate-800 bg-white p-1 transition-transform hover:scale-[1.03]"
+            >
+              <QRCodeSVG value={verifyUrl} size={72} level="M" bgColor="#FFFFFF" fgColor="#111111" className="h-full w-full" />
+            </Link>
+          </div>
+
+          {/* ── Field list — top group ── */}
+          <div className="space-y-1 px-5 pb-2">
+            {cardFields.map((f) => (
+              <CardField key={f.label} label={f.label} value={f.value} />
+            ))}
+          </div>
+
+          {/* ── Field list — bottom group ── */}
+          <div className="space-y-1 px-5 pb-2 pt-2">
+            {cardFields2.map((f) => (
+              <CardField key={f.label} label={f.label} value={f.value} />
+            ))}
+          </div>
+
+          {/* ── Footer signature ── */}
+          <div className="mt-auto flex flex-col items-center gap-1 pb-4 pt-2">
+            <div className="h-px w-32 bg-slate-500" />
+            <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">अधिकृत स्वाक्षरी</p>
+          </div>
+        </div>
       </div>
 
-
-      {/* ==================================================
-          VERIFICATION
-      ================================================== */}
-
-      <div
-        className="
-          flex
-          justify-center
-          print:hidden
-        "
-      >
-
-        <Button
-          variant="ghost"
-          icon={FiExternalLink}
-          onClick={() =>
-            navigate(
-              `/verify/${vendor.applicationNo}`
-            )
-          }
-        >
+      {/* ================= VERIFICATION ================= */}
+      <div className="flex justify-center print:hidden">
+        <Button variant="ghost" icon={FiExternalLink} onClick={() => navigate(`/verify/${vendor.applicationNo}`)}>
           Open Verification Screen
         </Button>
-
       </div>
 
-
-      {/* ==================================================
-          PRINT CSS
-      ================================================== */}
-
+      {/* ================= PRINT CSS ================= */}
       <style>{`
-
         @media print {
-
+          /*
+            The card's content (logo, photo, QR, text) is all sized in
+            fixed px for a 360px-wide box. Printing at 80mm (~302px)
+            shrank the box but NOT the fixed-px content inside it, so
+            the content overflowed the box and spilled onto extra pages.
+            Fix: print at the real px-equivalent size (360px / 536px
+            converted to mm at 96dpi), plus a small buffer, so nothing
+            inside needs to reflow or overflow.
+          */
+          html,
           body {
-            background: white !important;
+            width: 100mm !important;
+            height: 148.9mm !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
           }
 
           header,
           aside,
           nav,
-          .print\\\\:hidden {
+          .print\\:hidden {
             display: none !important;
+          }
+
+          body * {
+            visibility: hidden;
+          }
+
+          .smart-card,
+          .smart-card * {
+            visibility: visible;
           }
 
           .smart-card {
-            width: 85.6mm !important;
-            height: 54mm !important;
+            position: relative !important;
+            width: 100mm !important;
+            height: 148.9mm !important;
             max-width: none !important;
-            border-radius: 3mm !important;
+            aspect-ratio: 360 / 536 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
             box-shadow: none !important;
+            overflow: hidden !important;
+            background-size: 100% 100% !important;
             break-inside: avoid !important;
             page-break-inside: avoid !important;
-          }
-
-          .smart-card-front,
-          .smart-card-back {
-            margin: 0 auto !important;
-          }
-
-          .smart-card-front {
-            margin-bottom: 8mm !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
 
           @page {
-            size: A4 portrait;
-            margin: 12mm;
+            size: 100mm 148.9mm;
+            margin: 0 !important;
           }
-
-          .print\\\\:hidden {
-            display: none !important;
-          }
-
         }
-
       `}</style>
-
     </div>
   );
 }

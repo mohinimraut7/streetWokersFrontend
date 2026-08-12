@@ -14845,6 +14845,7 @@ import corpLogo from "../../../assets/logovvcmc.jpg";
 import mayorImg from "../../../assets/ajivsir7.jpeg";
 import deputyMayorImg from "../../../assets/dcm.jpg";
 import commissionerImg from "../../../assets/commissioner.jpg";
+// logovvcmc.jpg
 
 // ── Brand tokens — identical to Branding.jsx ──
 const TEAL = "#084449"; // primary
