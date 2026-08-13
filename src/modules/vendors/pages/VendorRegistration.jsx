@@ -253,7 +253,7 @@ export default function VendorRegistration() {
       if (!valid) return;
     }
     if (step === 4) {
-      const requiredDocs = ["photo", "aadhaarCard", "panCard", "addressProof"];
+      const requiredDocs = ["aadhaarCard","addressProof"];
       const missing = requiredDocs.some((k) => !documents[k]);
       if (missing) return;
     }
