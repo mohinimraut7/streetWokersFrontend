@@ -14848,7 +14848,7 @@
 //           {/* ── Footer signature ── */}
 //           <div className="mt-auto flex flex-col items-center gap-1 pb-4 pt-2">
 //             <div className="h-px w-32 bg-slate-500" />
-//             <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">अधिकृत स्वाक्षरी</p>
+//             <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">ी</p>
 //           </div>
 //         </div>
 //       </div>
@@ -15210,7 +15210,7 @@ export default function SmartCard() {
           {/* ── Footer signature ── */}
           <div className="mt-auto flex flex-col items-center gap-1 pb-4 pt-2">
             <div className="h-px w-32 bg-slate-500" />
-            <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">अधिकृत स्वाक्षरी</p>
+            <p className="text-[10px] font-bold tracking-wide text-[#1E1E1E]">सहाय्यक आयुक्त</p>
           </div>
         </div>
       </div>
