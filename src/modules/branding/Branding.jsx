@@ -1831,7 +1831,7 @@ const CREAM = "#FEFCF8"; // background
 
 const OFFICIALS = [
   {
-    name: "Shri. Ajeev Patil",
+    name: "Shri. Ajiv Patil",
     designation: ["Mayor,", "Vasai-Virar City", "Municipal Corporation"],
     photo: mayorImg,
   },

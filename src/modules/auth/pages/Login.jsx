@@ -1079,7 +1079,7 @@ const GOLD_LINK = "text-xs font-semibold";
 
 const OFFICIALS = [
   {
-    name: "Shri. Ajeev Patil",
+    name: "Shri. Ajiv Patil",
     designation: ["Mayor,", "Vasai-Virar City", "Municipal Corporation"],
     photo: mayorImg,
   },
