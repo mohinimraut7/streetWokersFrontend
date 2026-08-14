@@ -277,6 +277,7 @@
 
 // ==============================
 
+
 // import { useState } from "react";
 // import { useDispatch, useSelector } from "react-redux";
 // import { Link, useNavigate, useParams } from "react-router-dom";
@@ -1006,7 +1007,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiCheck, FiX, FiCornerUpLeft, FiCheckCircle, FiLoader, FiAlertCircle } from "react-icons/fi";
+import { FiArrowLeft, FiCheck, FiX, FiCornerUpLeft, FiCheckCircle, FiLoader, FiAlertCircle, FiMapPin } from "react-icons/fi";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import Avatar from "../../components/ui/Avatar";
@@ -1196,6 +1197,20 @@ export default function ApplicationDetails() {
               <p className="text-[11px] font-medium uppercase text-ink-400">Survey Officer's Recommendation</p>
               <p className="mt-1 font-semibold text-ink-800">{application.survey.recommendation}</p>
               {application.survey.comments && <p className="mt-1 text-xs text-ink-600">{application.survey.comments}</p>}
+              {application.survey.geoLocation?.lat != null && application.survey.geoLocation?.lng != null && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-ink-600">
+                  <FiMapPin size={13} className="text-brand-500" />
+                  {application.survey.geoLocation.lat}, {application.survey.geoLocation.lng}
+                  <a
+                    href={`https://www.google.com/maps?q=${application.survey.geoLocation.lat},${application.survey.geoLocation.lng}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-brand-600 underline"
+                  >
+                    View on Map
+                  </a>
+                </p>
+              )}
             </div>
           )}
 
@@ -1222,6 +1237,11 @@ export default function ApplicationDetails() {
                       <>
                         This application has reached a final state:{" "}
                         <span className="font-semibold text-ink-800">{application.status}</span>.
+                        {/* CHANGED (29-10 request): Smart Card now auto-generates the instant A.M.C.
+                            approves (see amcDecision on the backend) — so this manual button is no
+                            longer needed in the normal flow. Kept commented, not deleted, as a
+                            fallback in case an older application is ever stuck at "A.M.C. Approved"
+                            without a certificate.
                         {application.status === "A.M.C. Approved" && (
                           <div className="mt-3 space-y-2">
                             {idCardError && (
@@ -1230,14 +1250,15 @@ export default function ApplicationDetails() {
                                 {idCardError}
                               </div>
                             )}
-                            <Button size="sm" onClick={handleGenerateIdCard} disabled={idCardSubmitting}>
-                              {idCardSubmitting ? "Please wait..." : "Generate ID Card"}
+                            <Button size="sm" variant="success" onClick={handleGenerateIdCard} disabled={idCardSubmitting}>
+                              {idCardSubmitting ? "Please wait..." : "Generate Smart Card"}
                             </Button>
                             <p className="text-[11px] text-ink-400">
-                              Payment is not required right now — this issues the ID card directly.
+                              Payment is not required right now — this issues the Smart Card directly.
                             </p>
                           </div>
                         )}
+                        */}
                         {application.status === "Certificate Issued" && (
                           <div className="mt-3">
                             <Link to={`/smart-card/${application.applicationNo}`}>

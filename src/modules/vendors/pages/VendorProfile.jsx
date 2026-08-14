@@ -4923,13 +4923,16 @@ export default function VendorProfile() {
         </Card>
       )}
 
+      {/* CHANGED (29-10 request): Smart Card now auto-generates the instant A.M.C.
+          approves (see amcDecision on the backend) — so this manual button is no
+          longer needed in the normal flow. Kept commented, not deleted, as a fallback.
       {canAmcGenerateIdCard && (
         <Card>
           <p className="mb-1 flex items-center gap-1.5 font-display text-base font-bold text-ink-900">
-            <FiZap size={16} /> ID Card
+            <FiZap size={16} /> Smart Card
           </p>
           <p className="mb-3 text-xs text-ink-500">
-            This application has been approved by A.M.C. You can generate the vendor's ID Card now — payment
+            This application has been approved by A.M.C. You can generate the vendor's Smart Card now — payment
             is not required at this time (future scope).
           </p>
 
@@ -4941,10 +4944,11 @@ export default function VendorProfile() {
           )}
 
           <Button variant="success" icon={FiZap} onClick={handleGenerateIdCard} disabled={idCardSubmitting}>
-            {idCardSubmitting ? "Please wait..." : "Generate ID Card"}
+            {idCardSubmitting ? "Please wait..." : "Generate Smart Card"}
           </Button>
         </Card>
       )}
+      */}
 
       {/* DISABLED (28-10 request): Counter Officer standalone emergency ID-card generation
           turned off. Kept commented, not deleted, in case it's needed again in future.
