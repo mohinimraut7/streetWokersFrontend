@@ -3612,6 +3612,17 @@ export async function fetchVendorApplications({ status, page = 1, limit = 100 } 
     };
   }
 }
+export async function deleteVendorApplication(applicationNo) {
+  try {
+    const { data } = await apiClient.delete(`/applications/${applicationNo}`);
+    return data;
+  } catch (err) {
+    return {
+      success: false,
+      message: err.response?.data?.message || "Could not delete this application.",
+    };
+  }
+}
 
 // ── Fetch a single application by its applicationNo ──
 export async function fetchVendorApplicationByNo(applicationNo) {

@@ -1052,13 +1052,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiPlus, FiSearch, FiEye, FiChevronLeft, FiChevronRight, FiLoader, FiAlertCircle } from "react-icons/fi";
+import { FiPlus, FiSearch, FiEye, FiChevronLeft, FiChevronRight, FiLoader, FiAlertCircle,FiTrash2} from "react-icons/fi";
 import Card from "../../../components/ui/Card";
 import Button from "../../../components/ui/Button";
 import StatusChip from "../../../components/ui/StatusChip";
 import Avatar from "../../../components/ui/Avatar";
 import { IdBadge } from "../../../components/ui/Avatar";
-import { fetchVendorApplications } from "../../../services/vendorApplicationService";
+import { deleteVendorApplication, fetchVendorApplications } from "../../../services/vendorApplicationService";
+import { useAuth } from "../../auth/hooks/useAuth";
+
+
+
 
 const PAGE_SIZE = 6;
 const STATUS_FILTERS = ["All", "Pending Survey", "Under Survey", "Pending Approval", "Approved", "Rejected"];
@@ -1080,13 +1084,36 @@ const STATUS_DISPLAY_MAP = {
 };
 const displayStatus = (backendStatus) => STATUS_DISPLAY_MAP[backendStatus] || backendStatus;
 
+// export default function VendorList() {
+//   const [applications, setApplications] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [query, setQuery] = useState("");
+//   const [status, setStatus] = useState("All");
+//   const [page, setPage] = useState(1);
+
 export default function VendorList() {
+  const { user } = useAuth();
+  const canDelete = user?.role === "counter_officer" || user?.role === "super_admin";
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All");
   const [page, setPage] = useState(1);
+  const [deletingNo, setDeletingNo] = useState(null);
+
+  const handleDelete = async (applicationNo, name) => {
+    if (!window.confirm(`Delete ${name}'s registration (${applicationNo})? This cannot be undone.`)) return;
+    setDeletingNo(applicationNo);
+    const result = await deleteVendorApplication(applicationNo);
+    setDeletingNo(null);
+    if (!result.success) {
+      alert(result.message || "Could not delete this application.");
+      return;
+    }
+    setApplications((prev) => prev.filter((v) => v.applicationNo !== applicationNo));
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -1226,6 +1253,31 @@ export default function VendorList() {
                           <FiEye size={16} />
                         </Link>
                       </td>
+
+                      {/* <td className="px-5 py-3.5 text-right">
+                        <div className="inline-flex items-center gap-1">
+                          <Link
+                            to={`/vendors/profile/${v.applicationNo}`}
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-500 hover:bg-brand-50 hover:text-brand-600"
+                          >
+                            <FiEye size={16} />
+                          </Link>
+                          {canDelete && (
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(v.applicationNo, v.personal?.fullName || "this vendor")}
+                              disabled={deletingNo === v.applicationNo}
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-500 hover:bg-danger-50 hover:text-danger-500 disabled:opacity-50"
+                            >
+                              {deletingNo === v.applicationNo ? (
+                                <FiLoader size={16} className="animate-spin" />
+                              ) : (
+                                <FiTrash2 size={16} />
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </td> */}
                     </tr>
                   ))}
                   {pageItems.length === 0 && (
