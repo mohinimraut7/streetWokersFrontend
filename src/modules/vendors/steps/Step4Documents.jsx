@@ -22,7 +22,7 @@ export default function Step4Documents({ documents, setDocuments, errors = {} })
             key={f.key}
             label={f.label}
             // required={f.key !== "businessProof"}
-            required={f.key === "aadhaarCard" || f.key === "addressProof"}
+            required={f.key === "photo"||f.key === "aadhaarCard" || f.key === "addressProof"}
             hint={f.hint}
             value={documents[f.key]}
             onChange={(v) => setDoc(f.key, v)}
