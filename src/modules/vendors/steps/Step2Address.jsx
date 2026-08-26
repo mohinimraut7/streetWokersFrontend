@@ -417,9 +417,9 @@ export default function Step2Address({ register, errors, watch, setValue }) {
             required
             placeholder="House no, street, city, state, pincode"
             disabled={sameAsPermanent}
-            error={errors.currentAddress?.message}
+            error={errors.workingAddress?.message}
             className={sameAsPermanent ? "bg-ink-50 text-ink-500" : ""}
-            {...register("currentAddress", { required: "Working address is required" })}
+            {...register("workingAddress", { required: "Working address is required" })}
           />
           <label className="mt-2 flex items-center gap-2 text-xs font-medium text-ink-500">
             <input

@@ -646,7 +646,7 @@ export function PersonalDetailsPanel({ vendor }) {
           Address Information
         </h4>
         <Item label="Residence Address" value={address.permanentAddress} />
-        <Item label="Working Address" value={address.currentAddress} />
+        <Item label="Working Address" value={address.workingAddress} />
         <Item label="Ward" value={address.ward} />
         <Item label="Zone" value={address.zone} />
       </div>
