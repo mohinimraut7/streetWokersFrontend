@@ -1181,6 +1181,42 @@ export default function VendorList() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+
+  // Returns a compact list of page numbers with "..." for gaps, e.g. [1, "...", 27, 28, 29, "...", 267]
+function getPageNumbers(current, total, siblingCount = 1) {
+  const totalNumbers = siblingCount * 2 + 5; // first, last, current, 2 dots, siblings
+  if (total <= totalNumbers) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const leftSibling = Math.max(current - siblingCount, 1);
+  const rightSibling = Math.min(current + siblingCount, total);
+
+  const showLeftDots = leftSibling > 2;
+  const showRightDots = rightSibling < total - 1;
+
+  const pages = [];
+
+  if (!showLeftDots && showRightDots) {
+    const leftRange = Array.from({ length: 3 + siblingCount * 2 }, (_, i) => i + 1);
+    pages.push(...leftRange, "...", total);
+  } else if (showLeftDots && !showRightDots) {
+    const rightRange = Array.from(
+      { length: 3 + siblingCount * 2 },
+      (_, i) => total - (3 + siblingCount * 2) + i + 1
+    );
+    pages.push(1, "...", ...rightRange);
+  } else {
+    const middleRange = Array.from(
+      { length: rightSibling - leftSibling + 1 },
+      (_, i) => leftSibling + i
+    );
+    pages.push(1, "...", ...middleRange, "...", total);
+  }
+
+  return pages;
+}
+
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -1321,7 +1357,7 @@ export default function VendorList() {
               </table>
             </div>
 
-            <div className="flex items-center justify-between gap-4 border-t border-ink-100 px-5 py-4">
+            {/* <div className="flex items-center justify-between gap-4 border-t border-ink-100 px-5 py-4">
               <p className="text-xs text-ink-500">
                 Page {page} of {totalPages}
               </p>
@@ -1344,6 +1380,48 @@ export default function VendorList() {
                     {p}
                   </button>
                 ))}
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-100 text-ink-500 disabled:opacity-40"
+                >
+                  <FiChevronRight size={15} />
+                </button>
+              </div>
+            </div> */}
+
+
+                        <div className="flex items-center justify-between gap-4 border-t border-ink-100 px-5 py-4">
+              <p className="text-xs text-ink-500">
+                Page {page} of {totalPages}
+              </p>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-ink-100 text-ink-500 disabled:opacity-40"
+                >
+                  <FiChevronLeft size={15} />
+                </button>
+
+                {getPageNumbers(page, totalPages).map((p, idx) =>
+                  p === "..." ? (
+                    <span key={`dots-${idx}`} className="px-1 text-xs text-ink-400">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold ${
+                        p === page ? "bg-brand-500 text-white" : "text-ink-500 hover:bg-ink-50"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  )
+                )}
+
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
