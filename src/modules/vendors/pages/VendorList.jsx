@@ -1115,24 +1115,54 @@ export default function VendorList() {
     setApplications((prev) => prev.filter((v) => v.applicationNo !== applicationNo));
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   let cancelled = false;
+  //   setLoading(true);
+  //   setError("");
+  //   fetchVendorApplications({ limit: 100 }).then((result) => {
+  //     if (cancelled) return;
+  //     setLoading(false);
+  //     if (!result.success) {
+  //       setError(result.message || "Could not load vendor applications.");
+  //       return;
+  //     }
+  //     setApplications(result.data || []);
+  //   });
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, []);
+
+  
+    useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError("");
-    fetchVendorApplications({ limit: 100 }).then((result) => {
+    fetchVendorApplications({ limit: 1 }).then((countResult) => {
       if (cancelled) return;
-      setLoading(false);
-      if (!result.success) {
-        setError(result.message || "Could not load vendor applications.");
+      if (!countResult.success) {
+        setLoading(false);
+        setError(countResult.message || "Could not load vendor applications.");
         return;
       }
-      setApplications(result.data || []);
+      const dynamicLimit = countResult.total || 1;
+      fetchVendorApplications({ limit: dynamicLimit }).then((result) => {
+        if (cancelled) return;
+        setLoading(false);
+        if (!result.success) {
+          setError(result.message || "Could not load vendor applications.");
+          return;
+        }
+        setApplications(result.data || []);
+      });
     });
     return () => {
       cancelled = true;
     };
   }, []);
-
+  
+  
+  
   const filtered = useMemo(() => {
     return applications.filter((v) => {
       const name = v.personal?.fullName || "";

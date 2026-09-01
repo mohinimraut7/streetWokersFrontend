@@ -186,18 +186,64 @@ export default function SurveyList() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   // let cancelled = false;
+  //   // setLoading(true);
+  //   // setError("");
+  //   // fetchVendorApplications({ limit: 100 }).then((result) => {
+  //   //   if (cancelled) return;
+
+
+
+  //       let cancelled = false;
+  //   setLoading(true);
+  //   setError("");
+  //   fetchVendorApplications({ limit: 1 }).then((countResult) => {
+  //     if (cancelled) return;
+  //     if (!countResult.success) {
+  //       setLoading(false);
+  //       setError(countResult.message || "Could not load vendor applications.");
+  //       return;
+  //     }
+  //     const dynamicLimit = countResult.total || 1;
+  //     fetchVendorApplications({ limit: dynamicLimit }).then((result) => {
+  //       if (cancelled) return;
+  //     setLoading(false);
+  //     if (!result.success) {
+  //       setError(result.message || "Could not load survey queue.");
+  //       return;
+  //     }
+  //     setApplications(result.data || []);
+  //   });
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, []);
+
+
+
+
+    useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError("");
-    fetchVendorApplications({ limit: 100 }).then((result) => {
+    fetchVendorApplications({ limit: 1 }).then((countResult) => {
       if (cancelled) return;
-      setLoading(false);
-      if (!result.success) {
-        setError(result.message || "Could not load survey queue.");
+      if (!countResult.success) {
+        setLoading(false);
+        setError(countResult.message || "Could not load vendor applications.");
         return;
       }
-      setApplications(result.data || []);
+      const dynamicLimit = countResult.total || 1;
+      fetchVendorApplications({ limit: dynamicLimit }).then((result) => {
+        if (cancelled) return;
+        setLoading(false);
+        if (!result.success) {
+          setError(result.message || "Could not load survey queue.");
+          return;
+        }
+        setApplications(result.data || []);
+      });
     });
     return () => {
       cancelled = true;

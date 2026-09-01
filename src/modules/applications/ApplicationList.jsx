@@ -832,20 +832,60 @@ export default function ApplicationList() {
   const [bulkResult, setBulkResult] = useState(null); // { message, generatedCount, skippedCount }
   const [bulkError, setBulkError] = useState("");
 
-  const loadApplications = () => {
+  // const loadApplications = () => {
+  //   setLoading(true);
+  //   setError("");
+  //   fetchVendorApplications({ limit: 100 }).then((result) => {
+  //     setLoading(false);
+
+
+  //   const loadApplications = () => {
+  //   setLoading(true);
+  //   setError("");
+  //   fetchVendorApplications({ limit: 1 }).then((countResult) => {
+  //     if (!countResult.success) {
+  //       setLoading(false);
+  //       setError(countResult.message || "Could not load vendor applications.");
+  //       return;
+  //     }
+  //     const dynamicLimit = countResult.total || 1;
+  //     fetchVendorApplications({ limit: dynamicLimit }).then((result) => {
+  //       setLoading(false);
+  //     if (!result.success) {
+  //       setError(result.message || "Could not load applications.");
+  //       return;
+  //     }
+  //     // Only applications that have actually reached the A.M.C. stage (or beyond) belong in this module
+  //     const relevant = (result.data || []).filter((a) =>
+  //       ["Forwarded to A.M.C.", "Sent Back to Counter Officer", "A.M.C. Approved", "Rejected", "Payment Pending", "Payment Done", "Certificate Issued"].includes(a.status)
+  //     );
+  //     setApplications(relevant);
+  //   });
+  // };
+
+
+    const loadApplications = () => {
     setLoading(true);
     setError("");
-    fetchVendorApplications({ limit: 100 }).then((result) => {
-      setLoading(false);
-      if (!result.success) {
-        setError(result.message || "Could not load applications.");
+    fetchVendorApplications({ limit: 1 }).then((countResult) => {
+      if (!countResult.success) {
+        setLoading(false);
+        setError(countResult.message || "Could not load vendor applications.");
         return;
       }
-      // Only applications that have actually reached the A.M.C. stage (or beyond) belong in this module
-      const relevant = (result.data || []).filter((a) =>
-        ["Forwarded to A.M.C.", "Sent Back to Counter Officer", "A.M.C. Approved", "Rejected", "Payment Pending", "Payment Done", "Certificate Issued"].includes(a.status)
-      );
-      setApplications(relevant);
+      const dynamicLimit = countResult.total || 1;
+      fetchVendorApplications({ limit: dynamicLimit }).then((result) => {
+        setLoading(false);
+        if (!result.success) {
+          setError(result.message || "Could not load applications.");
+          return;
+        }
+        // Only applications that have actually reached the A.M.C. stage (or beyond) belong in this module
+        const relevant = (result.data || []).filter((a) =>
+          ["Forwarded to A.M.C.", "Sent Back to Counter Officer", "A.M.C. Approved", "Rejected", "Payment Pending", "Payment Done", "Certificate Issued"].includes(a.status)
+        );
+        setApplications(relevant);
+      });
     });
   };
 

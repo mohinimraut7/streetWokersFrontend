@@ -112,19 +112,63 @@ export default function PendingApproval() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   let cancelled = false;
+  //   setLoading(true);
+  //   setError("");
+  //   // // "Forwarded to A.M.C." — the backend already filters this to the logged-in officer's ward
+  //   // fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: 100 }).then((result) => {
+  //   //   if (cancelled) return;
+
+
+  //       // "Forwarded to A.M.C." — the backend already filters this to the logged-in officer's ward
+  //   fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: 1 }).then((countResult) => {
+  //     if (cancelled) return;
+  //     if (!countResult.success) {
+  //       setLoading(false);
+  //       setError(countResult.message || "Could not load vendor applications.");
+  //       return;
+  //     }
+  //     const dynamicLimit = countResult.total || 1;
+  //     fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: dynamicLimit }).then((result) => {
+  //       if (cancelled) return;
+  //     setLoading(false);
+  //     if (!result.success) {
+  //       setError(result.message || "Could not load your approval queue.");
+  //       return;
+  //     }
+  //     setMyQueue(result.data || []);
+  //   });
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, []);
+
+
+
+
+    useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError("");
     // "Forwarded to A.M.C." — the backend already filters this to the logged-in officer's ward
-    fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: 100 }).then((result) => {
+    fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: 1 }).then((countResult) => {
       if (cancelled) return;
-      setLoading(false);
-      if (!result.success) {
-        setError(result.message || "Could not load your approval queue.");
+      if (!countResult.success) {
+        setLoading(false);
+        setError(countResult.message || "Could not load vendor applications.");
         return;
       }
-      setMyQueue(result.data || []);
+      const dynamicLimit = countResult.total || 1;
+      fetchVendorApplications({ status: "Forwarded to A.M.C.", limit: dynamicLimit }).then((result) => {
+        if (cancelled) return;
+        setLoading(false);
+        if (!result.success) {
+          setError(result.message || "Could not load your approval queue.");
+          return;
+        }
+        setMyQueue(result.data || []);
+      });
     });
     return () => {
       cancelled = true;
