@@ -3207,9 +3207,9 @@ function getPageNumbers(current, total, siblingCount = 1) {
           <Button icon={FiDownload} variant="outline" onClick={handleExportExcel}>
             Reports Excel Download
           </Button>
-          <Link to="/vendors/register">
+          {/* <Link to="/vendors/register">
             <Button icon={FiPlus}>New Registration</Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
