@@ -2920,7 +2920,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiPlus, FiSearch, FiEye, FiChevronLeft, FiChevronRight, FiLoader, FiAlertCircle,FiTrash2, FiDownload} from "react-icons/fi";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import Card from "../../../components/ui/Card";
 import Button from "../../../components/ui/Button";
 import StatusChip from "../../../components/ui/StatusChip";
@@ -2986,28 +2987,111 @@ export default function VendorList() {
   // ── Reports Excel Download — exports the vendor list currently on screen (respects the
   //    officer's own ward scoping from the backend, plus whatever search/status filter is
   //    applied here) with each vendor's full info and status. ──
-  const handleExportExcel = () => {
-    const rows = filtered.map((v) => ({
-      "Application No": v.applicationNo || "",
-      "Vendor ID": v.vendorId || "",
-      "Full Name": v.personal?.fullName || "",
-      "Mobile": v.personal?.mobile || "",
-      "Ward": v.address?.ward || "",
-      "Zone": v.address?.zone || "",
-      "Business Type": v.business?.businessType || "",
-      "Status": displayStatus(v.status),
-      "Working Address": v.address?.workingAddress || "",
-      "Permanent Address": v.address?.permanentAddress || "",
-      "Road Name": v.address?.roadName || "",
-      "Certificate No": v.certificate?.certificateNo || "",
-      "Registered On": v.createdAt ? v.createdAt.slice(0, 10) : "",
-    }));
 
-    const worksheet = XLSX.utils.json_to_sheet(rows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Vendors");
+  // const handleExportExcel = () => {
+  //   const rows = filtered.map((v) => ({
+  //     "Application No": v.applicationNo || "",
+  //     "Vendor ID": v.vendorId || "",
+  //     "Full Name": v.personal?.fullName || "",
+  //     "Mobile": v.personal?.mobile || "",
+  //     "Ward": v.address?.ward || "",
+  //     "Zone": v.address?.zone || "",
+  //     "Business Type": v.business?.businessType || "",
+  //     "Status": displayStatus(v.status),
+  //     "Working Address": v.address?.workingAddress || "",
+  //     "Permanent Address": v.address?.permanentAddress || "",
+  //     "Road Name": v.address?.roadName || "",
+  //     "Certificate No": v.certificate?.certificateNo || "",
+  //     "Registered On": v.createdAt ? v.createdAt.slice(0, 10) : "",
+  //   }));
+
+  //   const worksheet = XLSX.utils.json_to_sheet(rows);
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, "Vendors");
+  //   const dateStr = new Date().toISOString().slice(0, 10);
+  //   XLSX.writeFile(workbook, `Vendor-Report-${dateStr}.xlsx`);
+  // };
+
+
+    const handleExportExcel = async () => {
+    // ── Summary counts (per current filter/search on screen) ──
+    const statusCounts = filtered.reduce((acc, v) => {
+      const key = displayStatus(v.status);
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Vendors");
+
+    // Title
+    const titleRow = sheet.addRow(["Vendor Report", new Date().toLocaleDateString("en-IN")]);
+    titleRow.font = { bold: true, size: 13 };
+
+    sheet.addRow([]);
+
+    const totalRow = sheet.addRow(["Total Vendors", filtered.length]);
+    totalRow.font = { bold: true };
+
+    Object.entries(statusCounts).forEach(([label, count]) => {
+      sheet.addRow([label, count]);
+    });
+
+    sheet.addRow([]); // spacer before the table
+
+    const headers = [
+      "Application No",
+      "Vendor ID",
+      "Full Name",
+      "Mobile",
+      "Ward",
+      "Zone",
+      "Business Type",
+      "Status",
+      "Working Address",
+      "Permanent Address",
+      "Road Name",
+      "Certificate No",
+      "Registered On",
+    ];
+    const headerRow = sheet.addRow(headers);
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true };
+    });
+
+    filtered.forEach((v) => {
+      sheet.addRow([
+        v.applicationNo || "",
+        v.vendorId || "",
+        v.personal?.fullName || "",
+        v.personal?.mobile || "",
+        v.address?.ward || "",
+        v.address?.zone || "",
+        v.business?.businessType || "",
+        displayStatus(v.status),
+        v.address?.workingAddress || "",
+        v.address?.permanentAddress || "",
+        v.address?.roadName || "",
+        v.certificate?.certificateNo || "",
+        v.createdAt ? v.createdAt.slice(0, 10) : "",
+      ]);
+    });
+
+    sheet.columns.forEach((col) => {
+      col.width = 20;
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const dateStr = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(workbook, `Vendor-Report-${dateStr}.xlsx`);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Vendor-Report-${dateStr}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   // useEffect(() => {
