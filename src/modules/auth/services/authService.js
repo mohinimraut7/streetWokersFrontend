@@ -1083,6 +1083,7 @@ export async function loginWithIdentifier({ identifier, password, expectedRole }
         message: `This account is not registered as ${expectedLabel}. Please pick the correct role.`,
       };
     }
+    
 
     const session = { token: data.token, user: data.user };
     saveSession(session);
