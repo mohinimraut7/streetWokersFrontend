@@ -995,9 +995,10 @@ export const STAFF_ROLES = [
   { value: "super_admin", label: "Super Admin" },
 ];
 
+
 // ── Combined list for the single "Login as" dropdown on the Login page ──
 // Vendor uses OTP login; everything else uses username + password.
-export const LOGIN_ROLES = [{ value: "vendor", label: "Vendor" }, ...STAFF_ROLES];
+export const LOGIN_ROLES = [...STAFF_ROLES];
 
 function saveSession(session) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(session));

@@ -4733,7 +4733,7 @@ import logo from "../assets/logovvcmc.jpg";
 const NAV = [
   { to: "/", label: "Dashboard", icon: FiGrid },
   { to: "/vendors/list", label: "Vendor Registration", icon: FiUserPlus },
-  { to: "/vendors/bulk-import", label: "Import Excel", icon: FiUpload },
+  // { to: "/vendors/bulk-import", label: "Import Excel", icon: FiUpload },
   { to: "/survey", label: "Vendor Survey", icon: FiMapPin },
   { to: "/applications", label: "Application Approval", icon: FiCheckSquare },
   { to: "/vendors/list", label: "Smart Card", icon: FiCreditCard },
