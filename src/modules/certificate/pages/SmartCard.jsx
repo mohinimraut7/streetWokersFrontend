@@ -1413,7 +1413,7 @@ export default function SmartCard() {
               
 
               <div className="mt-[1.5px] mb-[0.5px] flex shrink-0 items-center justify-center gap-3">
-                <div
+                {/* <div
                   className="relative h-[92px] w-[92px] shrink-0 overflow-hidden rounded-[6px] border-2 bg-[#ffffff]"
                   style={{ borderColor: "#F7E4C2" }}
                 >
@@ -1428,6 +1428,26 @@ export default function SmartCard() {
                       <FiUser size={34} strokeWidth={1.2} className="text-[#cbd5e1]" />
                     </div>
                   )}
+                </div> */}
+
+
+                                <div
+                  className="relative h-[92px] w-[92px] shrink-0 overflow-hidden rounded-[6px] border-2 bg-[#ffffff] p-[2px]"
+                  style={{ borderColor: "#F7E4C2" }}
+                >
+                  <div className="h-full w-full overflow-hidden rounded-[4px] bg-[#ffffff]">
+                    {vendor.documents?.photo ? (
+                      <img
+                        src={vendor.documents.photo}
+                        alt={vendor.personal.fullName}
+                        className="block h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-[#f8fafc]">
+                        <FiUser size={34} strokeWidth={1.2} className="text-[#cbd5e1]" />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <Link
