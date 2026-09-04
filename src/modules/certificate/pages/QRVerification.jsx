@@ -281,7 +281,8 @@ import { FiCheckCircle, FiXCircle, FiLoader } from "react-icons/fi";
 import Card from "../../../components/ui/Card";
 import Button from "../../../components/ui/Button";
 import Avatar from "../../../components/ui/Avatar";
-import { verifyCertificateByApplicationNo } from "../../../services/Vendorapplicationservice";
+// import { verifyCertificateByApplicationNo } from "../../../services/Vendorapplicationservice";
+import { verifyCertificateByApplicationNo } from "../../../services/vendorApplicationService";
 
 function formatDate(d) {
   if (!d) return "-";

@@ -5892,6 +5892,7 @@ export default function SmartCard() {
 
   
   const frontFields = [
+     { icon: FiCreditCard, label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
     { icon: FiUser, label: "विक्रेत्याचे नाव", value: vendor.personal.fullName, strong: true },
     { icon: FiUsers, label: "लिंग", value: genderType(vendor.personal.gender) },
     { icon: FiPhone, label: "मोबाईल क्रमांक", value: vendor.personal.mobile },
@@ -5904,7 +5905,7 @@ export default function SmartCard() {
   ];
 
   const personalFields = [
-    { icon: FiCreditCard, label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
+    // { icon: FiCreditCard, label: "ओळखपत्र क्रमांक", value: certificate.certificateNo },
     {
       icon: FiClock,
       label: "जन्मतारीख / वय",
@@ -5977,7 +5978,8 @@ export default function SmartCard() {
 
 
 
-                        <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-7 min-h-[120px]">
+                        {/* <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-7 min-h-[120px]"> */}
+                        <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-4 min-h-[96px]">
               <div
                 className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#ffffff] p-[3px] shadow-[0_0_0_1.5px_#C9A227]"
                 style={{ marginTop: "-18px" }}
@@ -6050,7 +6052,10 @@ export default function SmartCard() {
                 <p className="whitespace-nowrap text-[10.5px] font-bold uppercase leading-tight tracking-[0.05em] text-[#0B5D30]">
                   सहाय्यक आयुक्त
                 </p>
-                <p className="whitespace-nowrap text-[10.5px] font-semibold leading-tight text-[#475569]">(स्वाक्षरी)</p>
+                {/* <p className="whitespace-nowrap text-[10.5px] font-semibold leading-tight text-[#475569]">(स्वाक्षरी)</p> */}
+               <p className="whitespace-nowrap text-[10.5px] font-semibold leading-tight text-[#475569]">(प्रभाग समिती)</p>
+
+               
                 <div className="mt-1 h-px w-full bg-gradient-to-r from-transparent via-[#C9A227]/70 to-transparent" />
               </div>
             </div>
@@ -6073,7 +6078,8 @@ export default function SmartCard() {
               backgroundRepeat: "no-repeat",
             }}
           >
-            <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-7 min-h-[120px]">
+            {/* <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-7 min-h-[120px]"> */}
+            <div className="relative z-20 flex shrink-0 items-center gap-3 overflow-hidden pl-4 pr-3.5 pt-2 pb-4 min-h-[96px]">
               <div
                 className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#ffffff] p-[3px] shadow-[0_0_0_1.5px_#C9A227]"
                 style={{ marginTop: "-18px" }}

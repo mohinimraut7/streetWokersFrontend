@@ -15,7 +15,7 @@ import {
   createGeofence,
   updateGeofence,
   deleteGeofence,
-} from "../../../services/Geofenceservice";
+} from "../../../services/geofenceService";
 
 // Pretty-printed example so admins know the exact shape expected (GeoJSON order: [lng, lat])
 const COORDINATES_PLACEHOLDER = `[
