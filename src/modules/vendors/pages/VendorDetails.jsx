@@ -614,9 +614,19 @@
 
 
 
+// function Item({ label, value }) {
+//   return (
+//     <div className="flex items-center justify-between border-b border-ink-50 py-2.5 text-sm last:border-0">
+//       <span className="text-ink-500">{label}</span>
+//       <span className="font-semibold text-ink-900">{value || "-"}</span>
+//     </div>
+//   );
+// }
+
+
 function Item({ label, value }) {
   return (
-    <div className="flex items-center justify-between border-b border-ink-50 py-2.5 text-sm last:border-0">
+    <div className="flex flex-col gap-1 border-b border-ink-50 py-2.5 text-sm last:border-0 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
       <span className="text-ink-500">{label}</span>
       <span className="font-semibold text-ink-900">{value || "-"}</span>
     </div>
