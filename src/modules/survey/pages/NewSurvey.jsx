@@ -2785,8 +2785,8 @@ export default function NewSurvey() {
                 error={errors.longitude?.message}
                 {...register("longitude", { required: "Longitude is required" })}
               />
-              <Select label="Ward (zone change)" options={WARD_OPTIONS} {...register("ward")} />
-              <Select label="Zone (reference only)" options={ZONE_OPTIONS} disabled {...register("zone")} />
+              <Select label="Ward" options={WARD_OPTIONS} {...register("ward")} />
+              <Select label="Zone" options={ZONE_OPTIONS} disabled {...register("zone")} />
               <Select label="Market" options={MARKET_OPTIONS} className="col-span-2" {...register("market")} />
               <Input label="Road Width (in ft)" type="number" {...register("roadWidth")} />
               <Input label="Nearby Landmark" {...register("nearbyLandmark")} />
