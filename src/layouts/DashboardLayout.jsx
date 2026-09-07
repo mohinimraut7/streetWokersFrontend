@@ -4724,6 +4724,8 @@ import {
   FiLogOut,
   FiX,
   FiUpload,
+  FiChevronLeft,
+  FiChevronRight,
 } from "react-icons/fi";
 import { useAuth } from "../modules/auth/hooks/useAuth";
 // If you keep your logo at src/assets/logovvcmc.jpeg, just swap this import path.
@@ -4821,6 +4823,7 @@ function BackgroundBlobs() {
 
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -4846,14 +4849,27 @@ export default function DashboardLayout() {
       )}
 
       {/* Sidebar — premium floating enterprise style */}
-      <aside
+
+      {/* <aside
         className={clsx(
           "fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-hidden",
           "transition-transform duration-300 ease-out",
           "lg:sticky lg:top-4 lg:my-4 lg:ml-4 lg:h-[calc(100vh-2rem)] lg:translate-x-0",
           "lg:rounded-[24px] lg:shadow-[0_20px_50px_-14px_rgba(6,46,52,0.5)]",
           open ? "translate-x-0" : "-translate-x-full"
+        )} */}
+
+
+              <aside
+        className={clsx(
+          "fixed inset-y-0 left-0 z-40 flex w-[250px] shrink-0 flex-col overflow-hidden",
+          "transition-all duration-300 ease-out",
+          "lg:sticky lg:top-4 lg:my-4 lg:ml-4 lg:h-[calc(100vh-2rem)] lg:translate-x-0",
+          "lg:rounded-[24px] lg:shadow-[0_20px_50px_-14px_rgba(6,46,52,0.5)]",
+          collapsed ? "lg:w-[84px]" : "lg:w-[250px]",
+          open ? "translate-x-0" : "-translate-x-full"
         )}
+        
         style={{
           background: "linear-gradient(180deg, #0B4D52 0%, #08464B 50%, #062E34 100%)",
         }}
@@ -4869,6 +4885,15 @@ export default function DashboardLayout() {
         />
 
         {/* Mobile close button */}
+        {/* <button
+          onClick={() => setOpen(false)}
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
+          aria-label="Close menu"
+        >
+          <FiX size={18} />
+        </button> */}
+
+        {/* Mobile close button */}
         <button
           onClick={() => setOpen(false)}
           className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
@@ -4877,8 +4902,20 @@ export default function DashboardLayout() {
           <FiX size={18} />
         </button>
 
+        {/* Desktop collapse/expand toggle */}
+        {/* <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="absolute -right-3 top-9 z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-[#0B4D52] text-white/80 shadow-md transition-colors hover:bg-white/10 hover:text-white lg:flex"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? <FiChevronRight size={14} /> : <FiChevronLeft size={14} />}
+        </button> */}
+
+
+
         {/* Brand — logo alone on top (centered), name below it, Street Vendors below that */}
-        <div className="relative flex flex-col items-center gap-3 px-5 pb-5 pt-7 text-center">
+        {/* <div className="relative flex flex-col items-center gap-3 px-5 pb-5 pt-7 text-center">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-white/20">
             <img src={logo} alt="Municipal Corporation Logo" className="h-[52px] w-[52px] object-contain" />
           </div>
@@ -4893,12 +4930,80 @@ export default function DashboardLayout() {
             <span className="h-1 w-1 rounded-full bg-[#E9CE8B]/50" />
             <span className="h-px w-6 bg-[#E9CE8B]/50" />
           </div>
+        </div> */}
+
+
+        {/* <div className="relative flex flex-col items-center gap-3 px-5 pb-5 pt-7 text-center">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-white/20">
+            <img src={logo} alt="Municipal Corporation Logo" className="h-[52px] w-[52px] object-contain" />
+          </div>
+          {!collapsed && ( */}
+          
+        {/* <div className="relative flex flex-col items-center gap-3 px-5 pb-5 pt-7 text-center">
+          <button
+            onClick={() => setCollapsed((c) => !c)}
+            className="absolute right-3 top-3 z-10 hidden h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 shadow-sm transition-colors hover:bg-white/20 hover:text-white lg:flex"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <FiChevronRight size={14} /> : <FiChevronLeft size={14} />}
+          </button>
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-white/20">
+            <img src={logo} alt="Municipal Corporation Logo" className="h-[52px] w-[52px] object-contain" />
+          </div>
+          {!collapsed && ( */}
+
+
+        <div className="relative flex flex-col items-center gap-3 px-5 pb-5 pt-7 text-center">
+          {/* Desktop collapse/expand toggle — top-right corner when expanded, shifts below the logo when collapsed */}
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed((c) => !c)}
+              className="absolute right-3 top-3 z-10 hidden h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 shadow-sm transition-colors hover:bg-white/20 hover:text-white lg:flex"
+              aria-label="Collapse sidebar"
+              title="Collapse sidebar"
+            >
+              <FiChevronLeft size={14} />
+            </button>
+          )}
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-white/20">
+            <img src={logo} alt="Municipal Corporation Logo" className="h-[52px] w-[52px] object-contain" />
+          </div>
+          {collapsed && (
+            <button
+              onClick={() => setCollapsed((c) => !c)}
+              className="z-10 hidden h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 shadow-sm transition-colors hover:bg-white/20 hover:text-white lg:flex"
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+            >
+              <FiChevronRight size={14} />
+            </button>
+          )}
+          {!collapsed && (
+
+
+            <>
+              <div className="min-w-0 leading-tight">
+                <p className="text-[15px] font-extrabold leading-snug text-white">
+                  Vasai Virar City Municipal Corporation
+                </p>
+                <p className="mt-1.5 text-[13px] font-semibold text-[#E9CE8B]">Street Vendors Management System</p>
+              </div>
+              <div aria-hidden="true" className="mt-1 flex items-center gap-1.5">
+                <span className="h-px w-6 bg-[#E9CE8B]/50" />
+                <span className="h-1 w-1 rounded-full bg-[#E9CE8B]/50" />
+                <span className="h-px w-6 bg-[#E9CE8B]/50" />
+              </div>
+            </>
+          )}
         </div>
+
+
 
         <div aria-hidden="true" className="relative mx-5 h-px bg-white/10" />
 
         {/* Navigation */}
-        <nav className="relative flex-1 space-y-1.5 overflow-y-auto px-4 py-5">
+        {/* <nav className="relative flex-1 space-y-1.5 overflow-y-auto px-4 py-5">
           <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
             Main Menu
           </p>
@@ -4939,12 +5044,68 @@ export default function DashboardLayout() {
               )}
             </NavLink>
           ))}
+        </nav> */}
+
+
+        <nav className="relative flex-1 space-y-1.5 overflow-y-auto px-4 py-5">
+          {!collapsed && (
+            <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+              Main Menu
+            </p>
+          )}
+          {navItems.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to + label}
+              to={to}
+              end={to === "/"}
+              onClick={() => setOpen(false)}
+              title={collapsed ? label : undefined}
+              className={({ isActive }) =>
+                clsx(
+                  "group relative flex h-[52px] items-center rounded-2xl text-[15px] font-medium",
+                  collapsed ? "justify-center px-0" : "gap-3.5 px-4",
+                  "transition-all duration-300 ease-out",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16C47F] focus-visible:ring-offset-2 focus-visible:ring-offset-[#08464B]",
+                  isActive
+                    ? "bg-white text-ink-900 shadow-[0_10px_24px_-8px_rgba(0,0,0,0.35)]"
+                    : "text-white/70 hover:translate-x-1 hover:scale-[1.02] hover:bg-white/10 hover:text-white"
+                )
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-full bg-[#16C47F]"
+                    />
+                  )}
+                  <Icon
+                    size={22}
+                    className={clsx(
+                      "shrink-0 transition-colors duration-300",
+                      isActive ? "text-[#16C47F]" : "text-white/60 group-hover:text-white"
+                    )}
+                  />
+                  {!collapsed && <span className="truncate">{label}</span>}
+                </>
+              )}
+            </NavLink>
+          ))}
         </nav>
 
+
+
         {/* User profile card */}
-        <div className="relative mx-4 mb-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-md">
+        {/* <div className="relative mx-4 mb-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-md">
           <div className="flex items-center gap-3">
+            <div className="relative shrink-0"> */}
+
+        <div className="relative mx-4 mb-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3.5 backdrop-blur-md">
+          <div className={clsx("flex items-center", collapsed ? "flex-col gap-2.5" : "gap-3")}>
             <div className="relative shrink-0">
+
+
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-sm font-bold text-white ring-2 ring-white/20">
                 {initials}
               </div>
@@ -4953,7 +5114,7 @@ export default function DashboardLayout() {
                 className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[#08464B] bg-[#16C47F]"
               />
             </div>
-            <div className="min-w-0 flex-1 leading-tight">
+            {/* <div className="min-w-0 flex-1 leading-tight">
               <p className="truncate text-[13px] font-semibold text-white">{displayName}</p>
               <p className="truncate text-[11px] text-white/60">{displaySubtitle}</p>
             </div>
@@ -4964,7 +5125,24 @@ export default function DashboardLayout() {
               aria-label="Logout"
             >
               <FiLogOut size={16} />
+            </button> */}
+
+            {!collapsed && (
+              <div className="min-w-0 flex-1 leading-tight">
+                <p className="truncate text-[13px] font-semibold text-white">{displayName}</p>
+                <p className="truncate text-[11px] text-white/60">{displaySubtitle}</p>
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16C47F]"
+              title="Logout"
+              aria-label="Logout"
+            >
+              <FiLogOut size={16} />
             </button>
+
+
           </div>
         </div>
       </aside>

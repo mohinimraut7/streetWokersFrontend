@@ -48,7 +48,13 @@ export default function OtpInput({ value, onChange, length = 6 }) {
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={handlePaste}
-          className="h-12 w-11 rounded-xl border border-white/70 bg-white/50 text-center text-lg font-bold text-[#102B50] shadow-inner backdrop-blur-xl outline-none transition focus:border-[#0EA5A8] focus:ring-4 focus:ring-[#0EA5A8]/10"
+
+
+          // className="h-12 w-11 rounded-xl border border-white/70 bg-white/50 text-center text-lg font-bold text-[#102B50] shadow-inner backdrop-blur-xl outline-none transition focus:border-[#0EA5A8] focus:ring-4 focus:ring-[#0EA5A8]/10"
+                  // Old style — border was near-invisible (white/70 border on white/50 bg), boxes disappeared on light background.
+          // className="h-12 w-11 rounded-xl border border-white/70 bg-white/50 text-center text-lg font-bold text-[#102B50] shadow-inner backdrop-blur-xl outline-none transition focus:border-[#0EA5A8] focus:ring-4 focus:ring-[#0EA5A8]/10"
+          className="h-12 w-11 rounded-xl border-2 border-slate-300 bg-white text-center text-lg font-bold text-[#102B50] shadow-[inset_0_1px_2px_rgba(15,23,42,0.05)] outline-none transition-all duration-200 hover:border-slate-400 focus:border-[#0EA5A8] focus:shadow-[0_0_0_4px_rgba(14,165,168,0.12)]"
+        
         />
       ))}
     </div>
