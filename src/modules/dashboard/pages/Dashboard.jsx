@@ -30397,7 +30397,25 @@ export default function Dashboard() {
           </div>
 
           {/* Footer stats bar */}
-          <Card className="flex flex-wrap items-center gap-x-8 gap-y-4">
+          {/* <Card className="flex flex-wrap items-center gap-x-8 gap-y-4">
+            <FooterStat icon={FiMapPin} label="Total Zones" value={dataLoaded ? ZONE_OPTIONS.length : STATIC_ZONES} />
+            <FooterStat icon={FiMapPin} label="Total Wards" value={dataLoaded ? WARD_OPTIONS.length : STATIC_WARDS} />
+            <FooterStat icon={FiUsers} label="Active Inspectors" value={1} />
+            <FooterStat icon={FiUsers} label="Active Counter Staff" value={1} />
+            <div className="flex items-center gap-2.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-success-500" />
+              <div>
+                <p className="text-[11px] text-ink-400">System Status</p>
+                <p className="text-sm font-semibold text-ink-900">Healthy</p>
+              </div>
+            </div>
+            <FooterStat
+              icon={FiClock}
+              label="Last Backup"
+              value={new Date().toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+            />
+          </Card> */}
+          <Card className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-4">
             <FooterStat icon={FiMapPin} label="Total Zones" value={dataLoaded ? ZONE_OPTIONS.length : STATIC_ZONES} />
             <FooterStat icon={FiMapPin} label="Total Wards" value={dataLoaded ? WARD_OPTIONS.length : STATIC_WARDS} />
             <FooterStat icon={FiUsers} label="Active Inspectors" value={1} />
