@@ -30283,10 +30283,67 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Actions + Banner */}
-          <div className="grid grid-cols-1 gap-7 lg:grid-cols-[1.5fr_1fr]">
+          {/* <div className="grid grid-cols-1 gap-7 lg:grid-cols-[1.5fr_1fr]">
             <Card>
               <h2 className="mb-5 font-display text-base font-bold text-ink-900">Quick Actions</h2>
               <div className="grid grid-cols-3 gap-3">
+                {QUICK_ACTIONS.map((a) => {
+                  const [bg, text] = KPI_TONES[a.tone] || KPI_TONES.brand;
+                  return (
+                    <Link
+                      key={a.label}
+                      to={a.to}
+                      className="flex flex-col items-center gap-2 rounded-2xl border border-ink-100 px-3 py-4 text-center transition-colors hover:border-brand-300 hover:bg-brand-50/40"
+                    >
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${bg} ${text}`}>
+                        <a.icon size={18} />
+                      </div>
+                      <span className="text-[11.5px] font-semibold text-ink-700">{a.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </Card>
+
+            <Card
+              padded={false}
+              className="group relative flex min-h-[260px] flex-col justify-end overflow-hidden text-white shadow-[var(--shadow-soft-lg)]"
+            >
+              <img
+                src={vendorgadi}
+                alt="Street vendor with cart"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(6,46,52,0.05) 0%, rgba(6,46,52,0.35) 55%, rgba(6,46,52,0.92) 100%)",
+                }}
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full border-[6px] border-[#E9CE8B]/30"
+              />
+              <span className="relative z-10 mx-5 mt-5 inline-flex w-fit items-center gap-1.5 self-start rounded-full bg-white/15 px-3 py-1 text-[10.5px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+                <FiShield size={11} className="text-[#E9CE8B]" />
+                VVCMC Initiative
+              </span>
+              <div className="relative z-10 p-5 pt-3">
+                <p className="font-display text-lg font-bold leading-snug">Empowering Street Vendors</p>
+                <p className="mt-1.5 text-[12.5px] text-white/85">
+                  Building stronger communities through transparent &amp; efficient management.
+                </p>
+              </div>
+            </Card>
+          </div> */}
+
+
+          <div className="grid grid-cols-1 gap-7 lg:grid-cols-[1.5fr_1fr]">
+            <Card>
+              <h2 className="mb-5 font-display text-base font-bold text-ink-900">Quick Actions</h2>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {QUICK_ACTIONS.map((a) => {
                   const [bg, text] = KPI_TONES[a.tone] || KPI_TONES.brand;
                   return (
