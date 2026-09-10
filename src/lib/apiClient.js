@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// Backend base URL — set VITE_API_BASE_URL in your .env file (e.g. http://localhost:5010/api)
-// Falls back to localhost:5010 (matches your current backend PORT) if not set.
+
 const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5010/api";
 
 const apiClient = axios.create({
@@ -22,5 +21,22 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    const message = error.response?.data?.message || "";
+    if (status === 401 && message.includes("Invalid or expired token")) {
+      localStorage.removeItem("svms_auth");
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;
