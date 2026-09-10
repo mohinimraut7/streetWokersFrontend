@@ -964,7 +964,9 @@ export default function Login() {
         <div className="mt-0 shrink-0 border-t pt-3 pb-3" style={{ borderColor: "rgba(217,130,25,0.25)" }}>
                   {/* <div className="mx-auto flex max-w-4xl flex-wrap items-start justify-between gap-x-6 gap-y-4 sm:justify-center sm:gap-x-14 lg:mx-0 lg:max-w-none lg:justify-start lg:gap-x-28 lg:pr-[460px] xl:pr-[520px] xl:gap-x-32"> */}
           
-          <div className="mx-auto flex max-w-4xl flex-wrap items-start justify-between gap-x-6 gap-y-4 sm:justify-center sm:gap-x-14 lg:mx-0 lg:max-w-none lg:justify-start lg:gap-x-28 lg:pr-[460px] xl:pr-[520px] xl:gap-x-32" style={{ marginLeft: "90px" }}>
+          {/* <div className="mx-auto flex max-w-4xl flex-wrap items-start justify-between gap-x-6 gap-y-4 sm:justify-center sm:gap-x-14 lg:mx-0 lg:max-w-none lg:justify-start lg:gap-x-28 lg:pr-[460px] xl:pr-[520px] xl:gap-x-32" style={{ marginLeft: "90px" }}> */}
+          <div className="mx-auto flex max-w-4xl flex-wrap items-start justify-between gap-x-6 gap-y-4 sm:justify-center sm:gap-x-14 min-[992px]:flex-nowrap lg:mx-0 lg:max-w-none lg:justify-start lg:gap-x-28 lg:pr-[460px] xl:pr-[520px] xl:gap-x-32" style={{ marginLeft: "90px" }}>
+           
             {OFFICIALS.map((o) => (
               <OfficialProfile key={o.name} {...o} />
             ))}
