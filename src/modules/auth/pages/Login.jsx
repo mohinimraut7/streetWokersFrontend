@@ -632,7 +632,7 @@ export default function Login() {
               <form onSubmit={handleVendorPasswordLogin} className="mt-3.5 space-y-3.5">
                 <div>
                   <label className="mb-1.5 block text-xs font-bold text-[#102B50]">
-                    Mobile Number / Username<span className="ml-1 text-red-500">*</span>
+                   Username<span className="ml-1 text-red-500">*</span>
                   </label>
                   <div className={INPUT_WRAP}>
                     <FiUser className="mr-2.5 text-[#6380A2]" size={16} />

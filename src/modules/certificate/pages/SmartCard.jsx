@@ -6063,7 +6063,7 @@ export default function SmartCard() {
         </div>
 
         {/* ---------- BACK ---------- */}
-        <div className="flex flex-col items-center">
+        <div className=" flex flex-col items-center">
           <p className="text-xs font-semibold text-ink-500">Back</p>
           <div
             ref={backRef}
@@ -6094,7 +6094,12 @@ export default function SmartCard() {
               </div>
             </div>
 
-            <div className="relative z-10 flex flex-1 flex-col items-center gap-2.5 px-4 pb-2.5 pt-6">
+            {/* <div className="relative z-10 flex flex-1 flex-col items-center gap-2.5 px-4 pb-2.5 pt-6"> */}
+             
+             <div
+              // className="relative z-10 flex flex-1 flex-col items-center gap-2.5 px-4 pb-2.5 pt-6"
+              className="relative z-10 flex flex-1 flex-col items-center gap-2.5 px-4 pb-2.5 pt-[18px]"
+            >
               <div
                 className="relative grid w-full flex-1 content-start gap-y-[11px] gap-x-1.5"
                 style={{ gridTemplateColumns: "max-content max-content max-content 1fr" }}
@@ -6112,10 +6117,44 @@ export default function SmartCard() {
                     label={f.label}
                     value={f.value}
                     wrap={f.wrap}
+              //       accent={f.accent}
+              //     />
+              //   ))}
+              // </div>
+
                     accent={f.accent}
                   />
                 ))}
               </div>
+
+              {/* ── Notes (टीप), pinned to the bottom of the back face ── */}
+              {/* <div className="relative mt-auto w-full shrink-0 pt-1"> */}
+
+              <div
+                // className="relative mt-auto w-full shrink-0 pt-1"
+                className="relative mb-[10px] mt-auto w-full shrink-0 pt-1"
+              >
+
+                <div className="mb-1.5 flex items-center gap-2">
+                  <span className="whitespace-nowrap text-[10px] font-bold leading-none text-[#0B5D30]">टीप</span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-[#C9A227]/70 via-[#D9BE68]/50 to-transparent" />
+                </div>
+                <div className="space-y-[3px]">
+                  <div className="flex gap-1 text-[9.5px] font-medium leading-[13px] text-[#334155]">
+                    <span className="shrink-0 font-bold">१)</span>
+                    <span>ओळखपत्र हरवल्यास नगर पथविक्रेता समितीस निदर्शनास आणून द्यावे.</span>
+                  </div>
+                  <div className="flex gap-1 text-[9.5px] font-medium leading-[13px] text-[#334155]">
+                    <span className="shrink-0 font-bold">२)</span>
+                    <span>
+                      हे ओळखपत्र पथविक्रेता (उपजीविकेचे संरक्षण व पथविक्री विनियमन) अधिनियम २०१४ मधील कलम ६ (३)
+                      अंतर्गत असलेल्या अटींच्या आधारावर जारी केले आहे.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+
             </div>
           </div>
         </div>

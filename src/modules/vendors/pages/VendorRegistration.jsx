@@ -733,15 +733,38 @@
       trigger,
       formState: { errors },
       getValues,
+      setError, // NEW — used for partial business-timing check
     } = useForm({ mode: "onTouched" });
 
     const data = watch();
 
     const handleNext = async () => {
+      // if (step <= 3) {
+      //   const valid = await trigger(STEP_FIELDS[step]);
+      //   if (!valid) return;
+      // }
+
       if (step <= 3) {
         const valid = await trigger(STEP_FIELDS[step]);
         if (!valid) return;
       }
+      // NEW: timing is optional, but if any of the 6 dropdowns is picked all 6 are needed,
+      // otherwise the timing was silently saved as empty.
+      if (step === 3) {
+        const timingParts = [
+          "businessTimingFromHour", "businessTimingFromMinute", "businessTimingFromPeriod",
+          "businessTimingToHour", "businessTimingToMinute", "businessTimingToPeriod",
+        ];
+        const filledCount = timingParts.filter((k) => getValues(k)).length;
+        if (filledCount > 0 && filledCount < timingParts.length) {
+          timingParts.forEach((k) => {
+            if (!getValues(k)) setError(k, { type: "manual", message: "Required" });
+          });
+          return;
+        }
+      }
+
+
       if (step === 4) {
         const requiredDocs = ["photo","aadhaarCard","addressProof"];
         const missing = requiredDocs.some((k) => !documents[k]);
