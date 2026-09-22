@@ -5551,7 +5551,8 @@ function IconCardField({ icon: Icon, label, value, wrap = false, accent = "green
 
 function SectionHeading({ children }) {
   return (
-    <div className="col-span-4 flex items-center gap-2 pt-[3px] first:pt-0">
+    // <div className="col-span-4 flex items-center gap-2 pt-[3px] first:pt-0">
+        <div className="col-span-4 flex items-center gap-2 pt-[5px] first:pt-[2px]">
       <span className="whitespace-nowrap text-[8.4px] font-bold uppercase tracking-[0.16em] text-[#0B5D30]">
         {children}
       </span>
