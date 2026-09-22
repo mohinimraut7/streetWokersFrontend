@@ -7463,7 +7463,7 @@ export default function QRVerification() {
     { icon: FiPhone, mr: "मोबाईल क्रमांक", en: "Mobile No.", value: vendor.personal?.mobile || "-" },
     { icon: FiCalendar, mr: "जन्मतारीख / वय", en: "Date of Birth / Age", value: dobWithAge(vendor.personal?.dob) },
     { icon: FiShoppingBag, mr: "व्यवसायाचा प्रकार", en: "Business Type", value: vendor.business?.businessType || "-" },
-    { icon: FiMapPin, mr: "व्यवसायाचे ठिकाण", en: "Business Place", value: vendor.business?.businessPlace || "-" },
+    // { icon: FiMapPin, mr: "व्यवसायाचे ठिकाण", en: "Business Place", value: vendor.business?.businessPlace || "-" },
     { icon: FiClock, mr: "व्यवसायाची वेळ", en: "Business Timing", value: vendor.business?.businessTiming || "-" },
     {
       icon: FiMap,
@@ -7628,16 +7628,27 @@ export default function QRVerification() {
               </div>
 
               {/* row 1 — RIGHT: first two details, bottom-aligned with the divider under the photo */}
-              <div className="self-end">
+              {/* <div className="self-end">
                 {rightRows.slice(0, 2).map((r) => (
+                  <DetailRow key={r.en} icon={r.icon} mr={r.mr} en={r.en} value={r.value} wide />
+                ))}
+              </div> */}
+
+                            {/* row 1 — RIGHT: first detail only, bottom-aligned with the divider under the photo */}
+              <div className="self-end">
+                {rightRows.slice(0, 1).map((r) => (
                   <DetailRow key={r.en} icon={r.icon} mr={r.mr} en={r.en} value={r.value} wide />
                 ))}
               </div>
 
               {/* remaining rows: one left + one right per grid row → always the same height / line */}
-              {Array.from({ length: Math.max(leftRows.length, rightRows.length - 2) }).flatMap((_, i) => {
+              {/* {Array.from({ length: Math.max(leftRows.length, rightRows.length - 2) }).flatMap((_, i) => {
                 const l = leftRows[i];
-                const r = rightRows[i + 2];
+                const r = rightRows[i + 2]; */}
+              {Array.from({ length: Math.max(leftRows.length, rightRows.length - 1) }).flatMap((_, i) => {
+                const l = leftRows[i];
+                const r = rightRows[i + 1];
+
                 return [
                   l ? (
                     <DetailRow key={`l-${l.en}`} icon={l.icon} mr={l.mr} en={l.en} value={l.value} wide />

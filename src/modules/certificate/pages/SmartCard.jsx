@@ -5912,7 +5912,7 @@ export default function SmartCard() {
       value: `${formatDate(vendor.personal.dob)} / ${calcAge(vendor.personal.dob)} वर्षे`,
     },
     { icon: FiBriefcase, label: "व्यवसायाचा प्रकार", value: vendor.business.businessType },
-    { icon: FiMapPin, label: "विक्रीचे ठिकाण", value: vendor.business.businessPlace },
+    // { icon: FiMapPin, label: "विक्रीचे ठिकाण", value: vendor.business.businessPlace },
     { icon: FiClock, label: "व्यवसायाची वेळ", value: vendor.business.businessTiming },
   ];
 
@@ -6132,7 +6132,7 @@ export default function SmartCard() {
 
               <div
                 // className="relative mt-auto w-full shrink-0 pt-1"
-                className="relative mb-[10px] mt-auto w-full shrink-0 pt-1"
+                className="relative mb-[12px] mt-auto w-full shrink-0 pt-1"
               >
 
                 <div className="mb-1.5 flex items-center gap-2">
