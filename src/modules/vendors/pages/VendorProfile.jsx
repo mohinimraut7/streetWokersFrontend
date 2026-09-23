@@ -14735,8 +14735,14 @@
 // =============================================================
 
 import { useEffect, useState } from "react";
+// import { Link, useParams } from "react-router-dom";
+// import { FiArrowLeft, FiCheckCircle, FiLoader, FiAlertCircle, FiArrowRight, FiCornerUpLeft, FiEdit2, FiZap } from "react-icons/fi";
+
 import { Link, useParams } from "react-router-dom";
-import { FiArrowLeft, FiCheckCircle, FiLoader, FiAlertCircle, FiArrowRight, FiCornerUpLeft, FiEdit2, FiZap } from "react-icons/fi";
+// import { FiArrowLeft, FiCheckCircle, FiLoader, FiAlertCircle, FiArrowRight, FiCornerUpLeft, FiEdit2, FiZap } from "react-icons/fi";
+import { FiArrowLeft, FiCheckCircle, FiLoader, FiAlertCircle, FiArrowRight, FiCornerUpLeft, FiEdit2, FiZap, FiCamera } from "react-icons/fi";
+
+
 import Card from "../../../components/ui/Card";
 import Avatar from "../../../components/ui/Avatar";
 import { IdBadge } from "../../../components/ui/Avatar";
@@ -14750,7 +14756,12 @@ import {
   sendApplicationBackToVendor,
   submitApplicationDraft,
   // emergencyIssueCertificate, // DISABLED (28-10 request) — Counter Officer emergency bypass turned off
+//   generateIdCardByAmc,
+// } from "../../../services/vendorApplicationService";
+
+
   generateIdCardByAmc,
+  updateIdCardPhoto, // ID card photo update — Super Admin
 } from "../../../services/vendorApplicationService";
 import { PersonalDetailsPanel, BusinessInfoPanel, DocumentsPanel, SurveyLocationPanel } from "./VendorDetails";
 
@@ -14786,8 +14797,17 @@ export default function VendorProfile() {
   const [actionError, setActionError] = useState("");
   const [emergencySubmitting, setEmergencySubmitting] = useState(false); // kept (unused) — was for emergency bypass
   const [emergencyError, setEmergencyError] = useState(""); // kept (unused) — was for emergency bypass
+//   const [idCardSubmitting, setIdCardSubmitting] = useState(false);
+//   const [idCardError, setIdCardError] = useState("");
+
+
+
   const [idCardSubmitting, setIdCardSubmitting] = useState(false);
   const [idCardError, setIdCardError] = useState("");
+  // ── ID card photo update (approved vendors) ──
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
+  const [photoMsg, setPhotoMsg] = useState("");
 
   const loadVendor = () => {
     setLoading(true);
@@ -14871,7 +14891,39 @@ export default function VendorProfile() {
   // ── Generate/View Vendor ID is A.M.C.-only (29-10 request) — counter_officer,
   //    survey_officer and vendor must NOT be able to generate it, or even view it. ──
   const canSeeSmartCard = isAmc || isSuperAdmin;
+//   const canAmcGenerateIdCard = canSeeSmartCard && ["A.M.C. Approved", "Payment Pending"].includes(vendor.status);\
+
   const canAmcGenerateIdCard = canSeeSmartCard && ["A.M.C. Approved", "Payment Pending"].includes(vendor.status);
+
+  // ── ID card photo update — sadhya fakta Super Admin, approved vendors sathi ──
+  const canUpdatePhoto =
+    isSuperAdmin &&
+    ["A.M.C. Approved", "Payment Pending", "Payment Done", "Certificate Issued"].includes(vendor.status);
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setPhotoError("");
+    setPhotoMsg("");
+    if (!["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type)) {
+      setPhotoError("Only JPG / PNG / WEBP photo allowed ❌");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError("Photo must be under 5MB ❌");
+      return;
+    }
+    setPhotoUploading(true);
+    const result = await updateIdCardPhoto(applicationNo, file);
+    setPhotoUploading(false);
+    if (!result.success) {
+      setPhotoError(result.message || "Photo update failed ❌");
+      return;
+    }
+    setPhotoMsg("Photo updated successfully ✅");
+    loadVendor();
+  };
 
   const handleSubmitOnBehalf = async () => {
     setActionError("");
@@ -15160,9 +15212,35 @@ export default function VendorProfile() {
                 to={`/smart-card/${vendor.applicationNo}`}
                 className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600"
               >
-                Generate Smart Card
+                {/* Generate Smart Card
               </Link>
             )}
+          </div> */}
+
+
+
+                          Generate Smart Card
+              </Link>
+            )}
+            {canUpdatePhoto && (
+              <label
+                className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-brand-500 px-3 py-1.5 text-xs font-semibold text-brand-600 hover:bg-brand-50 ${
+                  photoUploading ? "pointer-events-none opacity-60" : ""
+                }`}
+              >
+                <FiCamera size={13} />
+                {photoUploading ? "Uploading..." : "Update ID Card Photo"}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={handlePhotoChange}
+                  disabled={photoUploading}
+                />
+              </label>
+            )}
+            {photoError && <span className="text-xs font-medium text-red-600">{photoError}</span>}
+            {photoMsg && <span className="text-xs font-medium text-green-600">{photoMsg}</span>}
           </div>
         </div>
 

@@ -128,6 +128,7 @@ export const BUSINESS_CATEGORY_OPTIONS = [
   { value: "Pan / Paan", label: "Pan / Paan" },
   { value: "Onion-Potato", label: "Onion-Potato" },
   { value: "Biryani", label: "Biryani" },
+   { value: "Food Stall", label: "Food Stall" },
   { value: "Other", label: "Other" },
 ];
 

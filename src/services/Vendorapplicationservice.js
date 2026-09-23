@@ -16197,7 +16197,30 @@ export async function bulkImportVendorApplications(rows) {
   } catch (err) {
     return {
       success: false,
+//       message: err.response?.data?.message || "Bulk import failed. Please try again.",
+//     };
+//   }
+// }
+
+
       message: err.response?.data?.message || "Bulk import failed. Please try again.",
+    };
+  }
+}
+
+// ── ID card photo update — Super Admin, approved vendors (fakta photo pathvto) ──
+export async function updateIdCardPhoto(applicationNo, file) {
+  const formData = new FormData();
+  formData.append("photo", file);
+  try {
+    const { data } = await apiClient.patch(`/applications/updatePhoto/${applicationNo}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data;
+  } catch (err) {
+    return {
+      success: false,
+      message: err.response?.data?.message || "Photo update failed. Please try again.",
     };
   }
 }
