@@ -457,7 +457,9 @@ export function mrDigits(value) {
 }
 
 /* "Ward A" → "प्रभाग अ" */
-const WARD_LETTERS = { A: "अ", B: "ब", C: "क", D: "ड", E: "ई", F: "फ", G: "ग", H: "ह", I: "आय" };
+// const WARD_LETTERS = { A: "अ", B: "ब", C: "क", D: "ड", E: "ई", F: "फ", G: "ग", H: "ह", I: "आय" };
+const WARD_LETTERS = { A: "समिती ए", B: "समिती बी", C: "समिती सी", D: "समिती डी", E: "समिती ई", F: "समिती एफ", G: "समिती जी", H: "समिती एच", I: "समिती आय" };
+
 
 export function wardMr(vendor) {
   const ward = vendor?.address?.ward || vendor?.ward;
