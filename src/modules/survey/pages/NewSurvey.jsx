@@ -2595,13 +2595,60 @@ export default function NewSurvey() {
         // No Feriwala Area Geofencing (NEW) — check immediately after capturing GPS
         checkGeofence(lat, lng);
       },
+  //     (err) => {
+  //       setLocating(false);
+  //       setLocateError(err?.message || "Could not fetch current location. Please allow location access and try again.");
+  //     },
+  //     { enableHighAccuracy: true, timeout: 10000 }
+  //   );
+  // };
+
+      // (err) => {
+      //   setLocating(false);
+      //   setLocateError(err?.message || "Could not fetch current location. Please allow location access and try again.");
+      // },
+      // { enableHighAccuracy: true, timeout: 10000 }
+      // ── 14-10 fix: raw browser text ("User denied Geolocation") was shown as-is, with no
+      //    guidance. Now map err.code to clear instructions + one low-accuracy retry on
+      //    timeout / position-unavailable (weak GPS indoors). Success path unchanged. ──
       (err) => {
+        if (err?.code === 2 || err?.code === 3) {
+          // POSITION_UNAVAILABLE / TIMEOUT → retry once with network-based location
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setLocating(false);
+              const lat = String(position.coords.latitude);
+              const lng = String(position.coords.longitude);
+              setValue("latitude", lat);
+              setValue("longitude", lng);
+              checkGeofence(lat, lng);
+            },
+            () => {
+              setLocating(false);
+              setLocateError("Unable to get location. Please turn ON phone Location/GPS, move to an open area and try again.");
+            },
+            { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
+          );
+          return;
+        }
         setLocating(false);
+        if (err?.code === 1) {
+          // PERMISSION_DENIED
+          const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+          setLocateError(
+            isIOS
+              ? "Location permission denied. iPhone: Settings → Privacy & Security → Location Services → ON → Safari Websites → 'While Using the App'. Then in Safari tap 'aA' → Website Settings → Location → Allow, and refresh."
+              : "Location permission denied. Tap the 🔒 icon in the address bar → Permissions → Location → Allow, turn ON phone GPS, and refresh."
+          );
+          return;
+        }
         setLocateError(err?.message || "Could not fetch current location. Please allow location access and try again.");
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
+
+
 
   const onSubmit = async (formData) => {
     if (!recommendation) return;
