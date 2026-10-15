@@ -1,0 +1,1 @@
+var e=`/assets/backbanner-C5AWABKo.png`;export{e as t};
